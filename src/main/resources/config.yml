@@ -1,0 +1,5 @@
+afk_time: 1200
+region: AFK
+commands:
+  - "msg {player} you were afk!"
+  - "eco give {player} 100"

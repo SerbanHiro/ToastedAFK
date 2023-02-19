@@ -1,0 +1,6 @@
+name: ToastedAFK
+version: '${project.version}'
+main: me.serbob.toastedafk.ToastedAFK
+api-version: 1.19
+authors: [ Serbob ]
+description: An afk plugin.
