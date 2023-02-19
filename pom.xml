@@ -6,7 +6,7 @@
 
     <groupId>me.serbob</groupId>
     <artifactId>ToastedAFK</artifactId>
-    <version>1.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <name>ToastedAFK</name>
