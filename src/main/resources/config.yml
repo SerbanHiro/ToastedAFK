@@ -1,4 +1,6 @@
-afk_time: 1200
+default_afk_time: 1200
+afk_times:
+  default: 1200
 region: AFK
 commands:
   - "msg {player} you were afk!"

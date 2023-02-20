@@ -1,6 +1,8 @@
 package me.serbob.toastedafk;
 
 import me.serbob.toastedafk.Utils.RegionUtils;
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -17,21 +19,29 @@ public final class ToastedAFK extends JavaPlugin {
     private static int TIMEOUT_SECONDS=1200; // 20 minutes in seconds
 
     private final Map<Player, Integer> afkTimers = new ConcurrentHashMap<>(); // map of player timers
+    private LuckPerms lp;
 
     @Override
     public void onEnable() {
         instance=this;
         saveDefaultConfig();
-        TIMEOUT_SECONDS=getConfig().getInt("afk_time");
+        TIMEOUT_SECONDS=getConfig().getInt("default_afk_time");
         REGION_NAME=getConfig().getString("region");
+        lp = LuckPermsProvider.get();
         getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             public void run() {
                 for (Player player : getServer().getOnlinePlayers()) {
                     if (RegionUtils.getPlayersInRegion(player.getLocation(), REGION_NAME, ToastedAFK.instance)) {
+                        String rank =lp.getUserManager().getUser(player.getName()).getPrimaryGroup();
+                        int TIMEOUT_SECONDS1 = TIMEOUT_SECONDS;
+                        try {
+                            TIMEOUT_SECONDS1=getConfig().getInt("afk_times."+rank);
+                        }catch (Exception ignored){}
+                       // player.sendMessage(lp.getUserManager().getUser(player.getName()).getPrimaryGroup());
                         //player.sendMessage("u are in afk region");
                         // check if player is in the region and start or reset their timer
                         if (!afkTimers.containsKey(player)) {
-                            afkTimers.put(player, TIMEOUT_SECONDS);
+                            afkTimers.put(player, TIMEOUT_SECONDS1);
                         }
                     } else {
                         // remove player timer if they leave the region

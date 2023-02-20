@@ -3,5 +3,6 @@ version: '${project.version}'
 main: me.serbob.toastedafk.ToastedAFK
 api-version: 1.19
 authors: [ Serbob ]
+softdepend: [LuckpermsAPI]
 description: An afk plugin.
 depend: [WorldGuard, FastAsyncWorldEdit]
