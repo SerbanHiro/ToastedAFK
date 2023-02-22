@@ -33,15 +33,14 @@ public final class ToastedAFK extends JavaPlugin {
                 for (Player player : getServer().getOnlinePlayers()) {
                     if (RegionUtils.getPlayersInRegion(player.getLocation(), REGION_NAME, ToastedAFK.instance)) {
                         String rank =lp.getUserManager().getUser(player.getName()).getPrimaryGroup();
-                        int TIMEOUT_SECONDS1 = TIMEOUT_SECONDS;
-                        try {
-                            TIMEOUT_SECONDS1=getConfig().getInt("afk_times."+rank);
-                        }catch (Exception ignored){}
+                        if(getConfig().getString("afk_times."+rank)!=null) {
+                            TIMEOUT_SECONDS=getConfig().getInt("afk_times."+rank);
+                        }
                        // player.sendMessage(lp.getUserManager().getUser(player.getName()).getPrimaryGroup());
                         //player.sendMessage("u are in afk region");
                         // check if player is in the region and start or reset their timer
                         if (!afkTimers.containsKey(player)) {
-                            afkTimers.put(player, TIMEOUT_SECONDS1);
+                            afkTimers.put(player, TIMEOUT_SECONDS);
                         }
                     } else {
                         // remove player timer if they leave the region
