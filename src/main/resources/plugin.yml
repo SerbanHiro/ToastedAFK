@@ -6,3 +6,6 @@ authors: [ Serbob ]
 softdepend: [LuckpermsAPI]
 description: An afk plugin.
 depend: [WorldGuard, FastAsyncWorldEdit]
+permissions:
+  afk.update:
+    default: op

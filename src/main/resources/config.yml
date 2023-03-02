@@ -1,3 +1,4 @@
+check_for_update: true
 default_afk_time: 1200
 afk_times: # rank parents here
   default: 1200
