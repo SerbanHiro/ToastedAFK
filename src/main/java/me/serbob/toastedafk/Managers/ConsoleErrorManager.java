@@ -6,10 +6,11 @@ import me.serbob.toastedafk.Utils.Logger;
 import me.serbob.toastedafk.Utils.Settings;
 import me.serbob.toastedafk.Utils.UpdateChecker;
 
+import static org.bukkit.Bukkit.getLogger;
+
 public class ConsoleErrorManager {
     public static void checkErrors() {
         checkForWG();
-        checkForFAWE();
         checkForLP();
         checkForUpdate();
     }
@@ -37,18 +38,22 @@ public class ConsoleErrorManager {
             ToastedAFK.instance.getServer().getPluginManager().disablePlugin(ToastedAFK.instance);
         }
     }
-    public static void checkForFAWE() {
-        if(ToastedAFK.instance.getServer().getPluginManager().getPlugin("FastAsyncWorldEdit")==null||
-                !ToastedAFK.instance.getServer().getPluginManager().getPlugin("FastAsyncWorldEdit").isEnabled()) {
-            Logger.log(Logger.LogLevel.ERROR, AFKUtil.c("&cFastAsyncWorldEdit doesn't exist! Plugin disabled!"));
-            ToastedAFK.instance.getServer().getPluginManager().disablePlugin(ToastedAFK.instance);
-        }
-    }
     public static void checkForLP() {
         if(ToastedAFK.instance.getServer().getPluginManager().getPlugin("LuckPerms")==null||
                 !ToastedAFK.instance.getServer().getPluginManager().getPlugin("LuckPerms").isEnabled()) {
             Logger.log(Logger.LogLevel.ERROR, AFKUtil.c("&cLuckPerms doesn't exist! Rank rewards disabled! (Just default one enabled)"));
-            ToastedAFK.instance.getServer().getPluginManager().disablePlugin(ToastedAFK.instance);
+        } else {
+            classImport();
+        }
+    }
+    public static void classImport() {
+        try {
+            // Import the LuckPerms API class
+            Class<?> luckPermsClass = Class.forName("net.luckperms.api.LuckPermsProvider");
+            // Do other LuckPerms-related tasks here
+        } catch (ClassNotFoundException e) {
+            getLogger().warning("Failed to import LuckPerms API class!");
+            e.printStackTrace();
         }
     }
 }

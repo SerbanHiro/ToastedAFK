@@ -1,7 +1,6 @@
 package me.serbob.toastedafk.Utils;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 
 public class Logger {
     public static void log(LogLevel level, String message) {
