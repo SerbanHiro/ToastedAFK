@@ -5,7 +5,15 @@ api-version: 1.19
 authors: [ Serbob ]
 softdepend: [LuckpermsAPI]
 description: An afk plugin.
-depend: [WorldGuard]
+commands:
+  afkwand:
+    description: Gives you a wand to specify the region where the players should receive their rewards.
+  afksave:
+    description: Save the positions made with the AFK Wand (pos1 and pos2)
 permissions:
   afk.update:
+    default: op
+  afkwand.use:
+    default: op
+  afksave.allow:
     default: op

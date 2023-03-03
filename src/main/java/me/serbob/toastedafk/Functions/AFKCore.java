@@ -28,18 +28,21 @@ public class AFKCore {
         });
     }
     public void addOrRemovePlayers() {
-        for (Player player : ToastedAFK.instance.getServer().getOnlinePlayers()) {
-            if (RegionUtils.getPlayersInRegion(player.getLocation(), REGION_NAME, ToastedAFK.instance)) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (RegionUtils.playerInCubiod(player.getLocation(), loc1,loc2)) {
                 String rank="";
-                if(ToastedAFK.instance.getServer().getPluginManager().getPlugin("LuckPerms").isEnabled()) {
-                    rank = net.luckperms.api.LuckPermsProvider.get().getUserManager().getUser(player.getName()).getPrimaryGroup();
-                }
-                Integer timeoutSeconds = ToastedAFK.instance.getConfig().getInt("afk_times." + rank);
                 TIMEOUT_SECONDS = ToastedAFK.instance.getConfig().getInt("default_afk_time");
-                if (ToastedAFK.instance.getConfig().getString("afk_times."+rank)!=null) {
-                    TIMEOUT_SECONDS = timeoutSeconds;
+                if(ToastedAFK.instance.getServer().getPluginManager().getPlugin("LuckPerms")==null) {}
+                else if(ToastedAFK.instance.getServer().getPluginManager().getPlugin("LuckPerms").isEnabled()) {
+                    rank = net.luckperms.api.LuckPermsProvider.get().getUserManager().getUser(player.getName()).getPrimaryGroup();
+                    if (ToastedAFK.instance.getConfig().getString("afk_times."+rank)!=null) {
+                        int timeoutSeconds = ToastedAFK.instance.getConfig().getInt("afk_times." + rank);
+                        TIMEOUT_SECONDS = timeoutSeconds;
+                    }
                 }
-                afkTimers.putIfAbsent(player, TIMEOUT_SECONDS);
+                if(!afkTimers.containsKey(player)) {
+                    afkTimers.put(player, TIMEOUT_SECONDS);
+                }
             } else {
                 afkTimers.remove(player);
             }

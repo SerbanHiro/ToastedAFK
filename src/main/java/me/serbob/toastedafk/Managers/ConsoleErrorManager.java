@@ -10,7 +10,6 @@ import static org.bukkit.Bukkit.getLogger;
 
 public class ConsoleErrorManager {
     public static void checkErrors() {
-        checkForWG();
         checkForLP();
         checkForUpdate();
     }
@@ -30,13 +29,6 @@ public class ConsoleErrorManager {
                 Logger.log(Logger.LogLevel.OUTLINE,  AFKUtil.c("⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯"));
             }
         });
-    }
-    public static void checkForWG() {
-        if(ToastedAFK.instance.getServer().getPluginManager().getPlugin("WorldGuard")==null||
-        !ToastedAFK.instance.getServer().getPluginManager().getPlugin("WorldGuard").isEnabled()) {
-            Logger.log(Logger.LogLevel.ERROR, AFKUtil.c("&cWorldGuard doesn't exist! Plugin disabled!"));
-            ToastedAFK.instance.getServer().getPluginManager().disablePlugin(ToastedAFK.instance);
-        }
     }
     public static void checkForLP() {
         if(ToastedAFK.instance.getServer().getPluginManager().getPlugin("LuckPerms")==null||
