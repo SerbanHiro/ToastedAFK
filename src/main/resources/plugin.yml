@@ -3,7 +3,7 @@ version: '${project.version}'
 main: me.serbob.toastedafk.ToastedAFK
 api-version: 1.19
 authors: [ Serbob ]
-softdepend: [LuckpermsAPI]
+softdepend: [LuckPerms, Multiworld, Multiverse-Core]
 description: An afk plugin.
 commands:
   afkwand:

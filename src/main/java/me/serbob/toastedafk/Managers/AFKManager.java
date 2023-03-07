@@ -2,6 +2,7 @@ package me.serbob.toastedafk.Managers;
 
 import me.serbob.toastedafk.Functions.AFKCore;
 import me.serbob.toastedafk.ToastedAFK;
+import me.serbob.toastedafk.Utils.AFKUtil;
 import me.serbob.toastedafk.Utils.Logger;
 import me.serbob.toastedafk.Utils.RegionUtils;
 import org.bukkit.Bukkit;
@@ -23,11 +24,10 @@ public class AFKManager {
         startScheduler();
     }
     public static void startScheduler() {
-        ToastedAFK.instance.getServer().getScheduler().scheduleSyncRepeatingTask(ToastedAFK.instance, new Runnable() {
-            public void run() {
-                AFKCore.getInstance().addOrRemovePlayers();
-                AFKCore.getInstance().regionCheck();
-            }
+        Logger.log(Logger.LogLevel.INFO, AFKUtil.c("Scheduler started!"));
+        ToastedAFK.instance.getServer().getScheduler().scheduleSyncRepeatingTask(ToastedAFK.instance, () -> {
+            AFKCore.getInstance().addOrRemovePlayers();
+            AFKCore.getInstance().regionCheck();
         }, 0L, 20L);
     }
 }
