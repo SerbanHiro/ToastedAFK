@@ -16,8 +16,10 @@ public final class ToastedAFK extends JavaPlugin {
         instance=this;
         saveDefaultConfig();
         configFile = new File(getDataFolder(),"config.yml");
-        ValuesManager.loadConfigValues();
-        AFKManager.start();
+        getServer().getScheduler().scheduleSyncDelayedTask(this, () -> {
+            ValuesManager.loadConfigValues();
+            AFKManager.start();
+        });
     }
     @Override
     public void onDisable() {
