@@ -6,6 +6,7 @@ import me.serbob.toastedafk.Utils.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
@@ -13,7 +14,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ValuesManager {
     public static Map<Player, Integer> afkTimers = new ConcurrentHashMap<>(); // map of player timers
+    public static Map<String, Integer> rankTime = new ConcurrentHashMap<>();
     public static int TIMEOUT_SECONDS=1200; // 20 minutes in seconds
+    public static int DEFAULT_AFK_TIME;
     public static Location loc1;
     public static Location loc2;
     public static Location tempLoc1;
@@ -28,6 +31,14 @@ public class ValuesManager {
                 ToastedAFK.instance.getConfig().getDouble("region.locations.loc2.x"),
                 ToastedAFK.instance.getConfig().getDouble("region.locations.loc2.y"),
                 ToastedAFK.instance.getConfig().getDouble("region.locations.loc2.z"));
+        DEFAULT_AFK_TIME = ToastedAFK.instance.getConfig().getInt("default_afk_time");
+        ConfigurationSection rankTimeSection = ToastedAFK.instance.getConfig().getConfigurationSection("afk_times");
+        if (rankTimeSection != null) {
+            for (String rankName : rankTimeSection.getKeys(false)) {
+                int timeoutSeconds = rankTimeSection.getInt(rankName);
+                rankTime.put(rankName, timeoutSeconds);
+            }
+        }
         Logger.log(Logger.LogLevel.INFO, AFKUtil.c("&aValues loaded!"));
     }
 }

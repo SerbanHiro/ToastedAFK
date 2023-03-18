@@ -6,6 +6,7 @@ import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 
 import static me.serbob.toastedafk.Managers.ValuesManager.tempLoc1;
 import static me.serbob.toastedafk.Managers.ValuesManager.tempLoc2;
@@ -24,15 +25,14 @@ public class WandEvents implements Listener {
                 }
                 if (event.getAction().name().contains("LEFT")) {
                     Block block = event.getClickedBlock();
-                    if (block.getType().isSolid()) {
-                        event.setCancelled(true);
-                        tempLoc1 = block.getLocation();
-                        event.getPlayer().sendMessage(ChatColor.LIGHT_PURPLE + "" + event.getClickedBlock().getLocation());
-                    }
+                    event.setCancelled(true);
+                    tempLoc1 = block.getLocation();
+                    event.getPlayer().sendMessage(ChatColor.LIGHT_PURPLE + "" + event.getClickedBlock().getLocation());
 
                 } else if (event.getAction().name().contains("RIGHT")) {
-                    Block block = event.getClickedBlock();
-                    if (block.getType().isSolid()) {
+                    EquipmentSlot e = event.getHand();
+                    if(e.equals(EquipmentSlot.HAND)) {
+                        Block block = event.getClickedBlock();
                         tempLoc2 = block.getLocation();
                         event.getPlayer().sendMessage(ChatColor.LIGHT_PURPLE + "" + event.getClickedBlock().getLocation() + "");
                     }

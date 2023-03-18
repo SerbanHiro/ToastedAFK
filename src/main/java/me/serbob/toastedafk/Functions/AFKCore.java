@@ -31,13 +31,12 @@ public class AFKCore {
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (RegionUtils.playerInCubiod(player.getLocation(), loc1,loc2)) {
                 String rank="";
-                TIMEOUT_SECONDS = ToastedAFK.instance.getConfig().getInt("default_afk_time");
+                TIMEOUT_SECONDS = DEFAULT_AFK_TIME;
                 if(ToastedAFK.instance.getServer().getPluginManager().getPlugin("LuckPerms")==null) {}
                 else if(ToastedAFK.instance.getServer().getPluginManager().getPlugin("LuckPerms").isEnabled()) {
                     rank = net.luckperms.api.LuckPermsProvider.get().getUserManager().getUser(player.getName()).getPrimaryGroup();
-                    if (ToastedAFK.instance.getConfig().getString("afk_times."+rank)!=null) {
-                        int timeoutSeconds = ToastedAFK.instance.getConfig().getInt("afk_times." + rank);
-                        TIMEOUT_SECONDS = timeoutSeconds;
+                    if (rankTime.get(rank)!=null) {
+                        TIMEOUT_SECONDS = rankTime.get(rank);
                     }
                 }
                 if(!afkTimers.containsKey(player)) {

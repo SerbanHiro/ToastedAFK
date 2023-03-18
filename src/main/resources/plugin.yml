@@ -6,14 +6,16 @@ authors: [ Serbob ]
 softdepend: [LuckPerms, Multiworld, Multiverse-Core]
 description: An afk plugin.
 commands:
-  afkwand:
-    description: Gives you a wand to specify the region where the players should receive their rewards.
-  afksave:
-    description: Save the positions made with the AFK Wand (pos1 and pos2)
+  tafk:
+    description: AFK Commands.
+    aliases:
+      - afk
 permissions:
   afk.update:
     default: op
-  afkwand.use:
+  afk.wand:
     default: op
-  afksave.allow:
+  afk.save:
+    default: op
+  afk.reload:
     default: op
