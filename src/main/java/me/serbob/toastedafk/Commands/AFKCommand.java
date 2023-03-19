@@ -10,6 +10,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -17,6 +18,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 import static me.serbob.toastedafk.Managers.AFKManager.startScheduler;
 import static me.serbob.toastedafk.Managers.AFKManager.taskID;
@@ -45,28 +50,82 @@ public class AFKCommand implements CommandExecutor {
             }
         } else if(args[0].equalsIgnoreCase("wand")) {
             if(sender.hasPermission("afk.wand")) {
-                wandCommand((Player) sender);
+                Player player = (Player) sender;
+                if(player.getInventory().firstEmpty() != -1) {
+                    wandCommand((Player) sender);
+                }
+                else {
+                    sender.sendMessage(ChatColor.RED + "Your inventory is full!");
+                }
             } else {
                 noPermission(sender);
                 return false;
             }
         } else if(args[0].equalsIgnoreCase("reload")) {
-            //if(sender.hasPermission("afk.reload")) {
-                configFile = new File(ToastedAFK.instance.getDataFolder(),"config.yml");
-                file = YamlConfiguration.loadConfiguration(configFile);
-                try {
-                    file.save(configFile);
-                    file.load(configFile);
-                } catch (IOException | InvalidConfigurationException e) {
-                    throw new RuntimeException(e);
+            if(sender.hasPermission("afk.reload")) {
+                if(args.length<2) {
+                    sender.sendMessage(ChatColor.RED + "Usage: /tafk reload <safe/force> (force will reset player's timers, safe won't do that)");
+                    return false;
                 }
-                afkTimers.clear();
-                ValuesManager.loadConfigValues();
-                //reloadCommand((Player) sender);
-            //} else {
-              //  noPermission(sender);
-              //  return false;
-            //}
+                if(args[1].equalsIgnoreCase("safe")) {
+                    reloadCommand((Player) sender);
+                } else if(args[1].equalsIgnoreCase("force")) {
+                    reloadCommand((Player) sender);
+                    afkTimers.clear();
+                }
+                sender.sendMessage(AFKUtil.c("&aAFK config.yml reloaded!"));
+            } else {
+                noPermission(sender);
+                return false;
+            }
+        } else if(args[0].equalsIgnoreCase("item")) {
+          if(sender.hasPermission("afk.item")) {
+              if(args.length<3) {
+                  sender.sendMessage(ChatColor.RED+ "Usage: /tafk item <add/remove> <name to be created in config.yml>");
+                  return false;
+              }
+              if(args[1].equalsIgnoreCase("add")) {
+                  ItemStack item_to_be_added = ((Player) sender).getItemInHand();
+                  if(ToastedAFK.instance.getConfig().getConfigurationSection("items").getKeys(false).contains(args[2])) {
+                      sender.sendMessage(ChatColor.RED + "Item already exists in config.yml");
+                      return false;
+                  }
+                  configFile = new File(ToastedAFK.instance.getDataFolder(),"config.yml");
+                  file = YamlConfiguration.loadConfiguration(configFile);
+                  file.set("items."+args[2],item_to_be_added);
+                  try {
+                      file.save(configFile);
+                      file.load(configFile);
+                  } catch (IOException | InvalidConfigurationException e) {
+                      throw new RuntimeException(e);
+                  }
+                  reloadCommand((Player) sender);
+                  sender.sendMessage(ChatColor.GREEN + "Item added!");
+              } else if(args[1].equalsIgnoreCase("remove")) {
+                  if((ToastedAFK.instance.getConfig().getConfigurationSection("items").getKeys(false).contains(args[2]))==false) {
+                      sender.sendMessage(ChatColor.RED + "Item doesn't exist in config.yml");
+                      return false;
+                  }
+                  configFile = new File(ToastedAFK.instance.getDataFolder(),"config.yml");
+                  file = YamlConfiguration.loadConfiguration(configFile);
+                  file.set("items."+args[2],null);
+                  try {
+                      file.save(configFile);
+                      file.load(configFile);
+                  } catch (IOException | InvalidConfigurationException e) {
+                      throw new RuntimeException(e);
+                  }
+                  reloadCommand((Player) sender);
+                  sender.sendMessage(ChatColor.GREEN + "Item removed!");
+              }
+          } else {
+              noPermission(sender);
+              return false;
+          }
+        } else if(args[0].equalsIgnoreCase("check")) {
+            Player player = (Player) sender;
+            sender.sendMessage(player.getItemInHand()+"");
+            System.out.println(player.getItemInHand()+"");
         }
         return true;
     }
@@ -74,7 +133,29 @@ public class AFKCommand implements CommandExecutor {
         sender.sendMessage(ChatColor.RED + "You do not have permission to use this command!");
     }
     public void reloadCommand(Player player) {
-        player.sendMessage(AFKUtil.c("&aAFK config.yml reloaded!"));
+        try {
+
+            // Create temporary file to hold new configuration
+            Path tempPath = Files.createTempFile("config", ".yml");
+            File tempFile = tempPath.toFile();
+            tempFile.deleteOnExit();
+
+            // Copy config.yml from plugin folder to temporary file
+            InputStream input = ToastedAFK.instance.getResource("config.yml");
+            Files.copy(input, tempPath, StandardCopyOption.REPLACE_EXISTING);
+
+            // Load new configuration from temporary file
+            FileConfiguration newConfig = new YamlConfiguration();
+            newConfig.load(tempFile);
+
+            // Set new configuration as the active configuration
+            ToastedAFK.instance.reloadConfig();
+            ToastedAFK.instance.getConfig().setDefaults(newConfig);
+            ToastedAFK.instance.saveConfig();
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+        ValuesManager.loadConfigValues();
     }
     public void saveCommand(Player player) {
         configFile = new File(ToastedAFK.instance.getDataFolder(),"config.yml");
@@ -102,6 +183,7 @@ public class AFKCommand implements CommandExecutor {
         wand = new ItemStack(Material.STONE_AXE);
         ItemMeta wandMeta = wand.getItemMeta();
         wandMeta.setDisplayName(AFKUtil.c("&dAFK Wand"));
+        wandMeta.setLocalizedName("AFKWand");
         wand.setItemMeta(wandMeta);
 
         player.getInventory().addItem(wand);

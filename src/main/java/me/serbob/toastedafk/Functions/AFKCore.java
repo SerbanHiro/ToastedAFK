@@ -23,6 +23,11 @@ public class AFKCore {
                 commands.forEach(command -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("{player}", player.getName())));
                 afkTimers.remove(player);
             } else {
+                Bukkit.broadcastMessage("TESTTTTTTTTTT");
+                player.setLevel(timeLeft);
+                player.setExp(timeLeft);
+                Bukkit.broadcastMessage(player.getExpToLevel()+"");
+                Bukkit.broadcastMessage(player.getExp()+"");
                 afkTimers.put(player, timeLeft);
             }
         });
@@ -41,9 +46,11 @@ public class AFKCore {
                 }
                 if(!afkTimers.containsKey(player)) {
                     afkTimers.put(player, TIMEOUT_SECONDS);
+                    expTimer.put(player, player.getExpToLevel());
                 }
             } else {
                 afkTimers.remove(player);
+                expTimer.remove(player);
             }
         }
     }

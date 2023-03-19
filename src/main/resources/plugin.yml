@@ -10,6 +10,10 @@ commands:
     description: AFK Commands.
     aliases:
       - afk
+  silentgive:
+    description: Silent give.
+    aliases:
+      - sgive
 permissions:
   afk.update:
     default: op
@@ -18,4 +22,8 @@ permissions:
   afk.save:
     default: op
   afk.reload:
+    default: op
+  afk.item:
+    default: op
+  silentgive.use:
     default: op

@@ -1,7 +1,7 @@
 check_for_update: true
 default_afk_time: 1200
 afk_times: # rank parents here
-  default: 1200
+  default: 1200 # in seconds
 region:
   locations:
     world: world
@@ -13,6 +13,19 @@ region:
       x: x
       y: y
       z: z
-commands:
+commands: # silent commands: use sgive to give players items without showing anything in console
+          # btw, ONLY with sgive you will be able to give items with NBT tags if players are afk
+          # usage: /silentgive (or sgive) {player} (if it's consolesender then you can put the name from items inside {})
   - "msg {player} you were afk!"
   - "eco give {player} 100"
+  - "silentgive {player} {test3}"
+items:
+  test3:
+    ==: org.bukkit.inventory.ItemStack
+    v: 3218
+    type: NETHERITE_SWORD
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: '{"extra":[{"italic":false,"color":"red","text":"TESTING"}],"text":""}'
+      Unbreakable: true

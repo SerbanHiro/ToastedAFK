@@ -19,7 +19,7 @@ public class WandEvents implements Listener {
                     !event.getPlayer().getItemInHand().hasItemMeta()) {
                 return;
             }
-            if (ChatColor.stripColor(event.getPlayer().getItemInHand().getItemMeta().getDisplayName()).equalsIgnoreCase("AFK Wand")) {
+            if (event.getPlayer().getItemInHand().getItemMeta().getLocalizedName().equalsIgnoreCase("AFKWand")) {
                 if (!event.getPlayer().hasPermission("afkwand.use")) {
                     return;
                 }
