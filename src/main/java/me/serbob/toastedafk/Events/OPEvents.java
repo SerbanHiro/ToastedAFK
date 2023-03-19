@@ -7,9 +7,14 @@ import me.serbob.toastedafk.Utils.UpdateChecker;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
-public class OPJoined implements Listener {
+import static me.serbob.toastedafk.Managers.ValuesManager.expTimer;
+import static me.serbob.toastedafk.Managers.ValuesManager.levelTimer;
+
+public class OPEvents implements Listener {
     @EventHandler
     public void onJoin(final PlayerJoinEvent e) {
         Player p = e.getPlayer();
@@ -29,6 +34,35 @@ public class OPJoined implements Listener {
                         p.sendMessage(AFKUtil.c("&8&l&m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯"));                    }
                 });
             }
+        }
+    }
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        if(ToastedAFK.instance.getConfig().getBoolean("show_xp_bar")==false) {
+            return;
+        }
+        if(levelTimer.containsKey(player)) {
+            player.setLevel(levelTimer.get(player));
+            levelTimer.remove(player);
+            player.setExp(expTimer.get(player));
+            expTimer.remove(player);
+        }
+    }
+    @EventHandler
+    public void onDeath(PlayerDeathEvent event) {
+        if(!(event.getEntity() instanceof Player)) {
+            return;
+        }
+        if(ToastedAFK.instance.getConfig().getBoolean("show_xp_bar")==false) {
+            return;
+        }
+        Player player = event.getEntity();
+        if(levelTimer.containsKey(player)) {
+            player.setLevel(levelTimer.get(player));
+            levelTimer.remove(player);
+            player.setExp(expTimer.get(player));
+            expTimer.remove(player);
         }
     }
 }

@@ -13,6 +13,7 @@ region:
       x: x
       y: y
       z: z
+show_xp_bar: true # when player is inside region it will show them (BETA)
 commands: # silent commands: use sgive to give players items without showing anything in console
           # btw, ONLY with sgive you will be able to give items with NBT tags if players are afk
           # usage: /silentgive (or sgive) {player} (if it's consolesender then you can put the name from items inside {})

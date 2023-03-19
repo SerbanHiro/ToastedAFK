@@ -4,12 +4,14 @@ import me.serbob.toastedafk.Managers.AFKManager;
 import me.serbob.toastedafk.Managers.ValuesManager;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
-import static me.serbob.toastedafk.Managers.ValuesManager.afkTimers;
+import static me.serbob.toastedafk.Managers.ValuesManager.*;
 
 public final class ToastedAFK extends JavaPlugin {
     public static ToastedAFK instance;
@@ -27,6 +29,17 @@ public final class ToastedAFK extends JavaPlugin {
     }
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        for(Map.Entry<Player, Integer> entry: levelTimer.entrySet()) {
+            Player player = entry.getKey();
+            int level = entry.getValue();
+            player.setLevel(level);
+            levelTimer.remove(player);
+        }
+        for(Map.Entry<Player, Float> entry : expTimer.entrySet()) {
+            Player player = entry.getKey();
+            Float exp = entry.getValue();
+            player.setExp(exp);
+            expTimer.remove(player);
+        }
     }
 }

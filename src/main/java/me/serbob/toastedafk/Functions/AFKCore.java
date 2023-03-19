@@ -19,15 +19,13 @@ public class AFKCore {
     public void regionCheck() {
         List<String> commands = ToastedAFK.instance.getConfig().getStringList("commands");
         afkTimers.forEach((player, timeLeft) -> {
-            if (--timeLeft <= 0) {
+            if(ToastedAFK.instance.getConfig().getBoolean("show_xp_bar")) {
+                player.setLevel(afkTimers.get(player));
+            }
+            if (timeLeft-- <= 0) {
                 commands.forEach(command -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("{player}", player.getName())));
                 afkTimers.remove(player);
             } else {
-                Bukkit.broadcastMessage("TESTTTTTTTTTT");
-                player.setLevel(timeLeft);
-                player.setExp(timeLeft);
-                Bukkit.broadcastMessage(player.getExpToLevel()+"");
-                Bukkit.broadcastMessage(player.getExp()+"");
                 afkTimers.put(player, timeLeft);
             }
         });
@@ -46,11 +44,22 @@ public class AFKCore {
                 }
                 if(!afkTimers.containsKey(player)) {
                     afkTimers.put(player, TIMEOUT_SECONDS);
-                    expTimer.put(player, player.getExpToLevel());
+                    if(ToastedAFK.instance.getConfig().getBoolean("show_xp_bar")) {
+                        levelTimer.put(player, player.getLevel());
+                        expTimer.put(player, player.getExp());
+                        player.setExp(1.0f);
+                    }
                 }
             } else {
+                if(ToastedAFK.instance.getConfig().getBoolean("show_xp_bar")) {
+                    if (levelTimer.containsKey(player)) {
+                        player.setLevel(levelTimer.get(player));
+                        player.setExp(expTimer.get(player));
+                    }
+                    levelTimer.remove(player);
+                    expTimer.remove(player);
+                }
                 afkTimers.remove(player);
-                expTimer.remove(player);
             }
         }
     }
