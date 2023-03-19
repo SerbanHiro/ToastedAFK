@@ -23,8 +23,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
-import static me.serbob.toastedafk.Managers.AFKManager.startScheduler;
-import static me.serbob.toastedafk.Managers.AFKManager.taskID;
 import static me.serbob.toastedafk.Managers.ValuesManager.*;
 import static me.serbob.toastedafk.Managers.ValuesManager.tempLoc2;
 import static me.serbob.toastedafk.ToastedAFK.configFile;
@@ -38,7 +36,7 @@ public class AFKCommand implements CommandExecutor {
             return false;
         }
         if(args.length<1) {
-            sender.sendMessage(ChatColor.RED + "Usage: /tafk <wand/save/reload>");
+            sender.sendMessage(ChatColor.RED + "Usage: /tafk <wand/save/reload/item>");
             return false;
         }
         if(args[0].equalsIgnoreCase("save")) {

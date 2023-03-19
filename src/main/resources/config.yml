@@ -1,6 +1,14 @@
-check_for_update: true
-default_afk_time: 1200
-afk_times: # rank parents here
+# DOCS BEGIN #
+# Commands:
+#  - /tafk <wand/save/reload/item> (aliases: /afk)
+#  - /silentgive {player} <item> <amount>(optional, by default it's 1)
+#    -> (if you use this inside commands to give to afk players, you can even give NBT items too!)
+#    -> (if you want to give custom items from the items(configuration section) you will need to put the name inside { }
+#    -> e.g.: /sgive {player} {test3} 2
+# DOCS END #
+check_for_update: true # if a new update on spigot is released, you'll get a message in console and ingame
+default_afk_time: 1200 # in seconds
+afk_times: # name of permissions here
   default: 1200 # in seconds
 region:
   locations:
@@ -13,7 +21,11 @@ region:
       x: x
       y: y
       z: z
+
+# MESSAGES AND SOME CONFIGURATIONS ABOUT REGION
 show_xp_bar: true # when player is inside region it will show them (BETA)
+silent_player_inventory_full: "&cYour inventory is full, therefore you will not receive anything!"
+
 commands: # silent commands: use sgive to give players items without showing anything in console
           # btw, ONLY with sgive you will be able to give items with NBT tags if players are afk
           # usage: /silentgive (or sgive) {player} (if it's consolesender then you can put the name from items inside {})

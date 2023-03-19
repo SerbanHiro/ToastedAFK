@@ -1,13 +1,13 @@
 package me.serbob.toastedafk.SilentCommands;
 
 import me.serbob.toastedafk.ToastedAFK;
+import me.serbob.toastedafk.Utils.AFKUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.yaml.snakeyaml.Yaml;
@@ -31,7 +31,7 @@ public class SilentGiveCommand implements CommandExecutor {
             return false;
         }
         if (victim.getInventory().firstEmpty() == -1) {
-            victim.sendMessage(ChatColor.RED + "Your inventory was full, therefore you didn't receive anything!");
+            victim.sendMessage(AFKUtil.c(ToastedAFK.instance.getConfig().getString("silent_player_inventory_full")));
             return false;
         }
         int amount = 1;

@@ -1,5 +1,7 @@
 package me.serbob.toastedafk.Events;
 
+import me.serbob.toastedafk.Utils.AFKUtil;
+import me.serbob.toastedafk.Utils.RegionUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -27,14 +29,18 @@ public class WandEvents implements Listener {
                     Block block = event.getClickedBlock();
                     event.setCancelled(true);
                     tempLoc1 = block.getLocation();
-                    event.getPlayer().sendMessage(ChatColor.LIGHT_PURPLE + "" + event.getClickedBlock().getLocation());
+                    event.getPlayer().sendMessage(AFKUtil.c("&7(&cAFK&7) Position 1! x: &c" + event.getClickedBlock().getX()+
+                            " &7y: &c" + event.getClickedBlock().getY()+
+                            " &7z: &c" + event.getClickedBlock().getZ()));
 
                 } else if (event.getAction().name().contains("RIGHT")) {
                     EquipmentSlot e = event.getHand();
                     if(e.equals(EquipmentSlot.HAND)) {
                         Block block = event.getClickedBlock();
                         tempLoc2 = block.getLocation();
-                        event.getPlayer().sendMessage(ChatColor.LIGHT_PURPLE + "" + event.getClickedBlock().getLocation() + "");
+                        event.getPlayer().sendMessage(AFKUtil.c("&7(&cAFK&7) Position 2! x: &c" + event.getClickedBlock().getX()+
+                                " &7y: &c" + event.getClickedBlock().getY()+
+                                " &7z: &c" + event.getClickedBlock().getZ()));
                     }
                 }
             }
