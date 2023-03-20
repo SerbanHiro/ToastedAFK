@@ -46,4 +46,5 @@ public class WandEvents implements Listener {
             }
         } catch (Exception ignored) {}
     }
+
 }
