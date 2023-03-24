@@ -19,10 +19,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import static me.serbob.toastedafk.Managers.ValuesManager.*;
-import static me.serbob.toastedafk.Managers.ValuesManager.afkTimers;
-import static me.serbob.toastedafk.Utils.RegionUtils.playerInCubiod;
-
 public class AFKManager {
     public static void start() {
         ConsoleErrorManager.checkErrors();

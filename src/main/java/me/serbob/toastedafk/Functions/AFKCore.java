@@ -35,7 +35,9 @@ public class AFKCore {
     }
     public void addOrRemovePlayers() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (RegionUtils.playerInCubiod(player.getLocation(), loc1,loc2)) {
+            if (/**RegionUtils.getPlayersInRegion(player.getLocation(),
+                    ToastedAFK.instance.getConfig().getString("worldguard_region"),
+                    ToastedAFK.instance)*/RegionUtils.playerInCubiod(player.getLocation(),loc1,loc2)) {
                 //String rank="";
                 TIMEOUT_SECONDS = DEFAULT_AFK_TIME;
 
