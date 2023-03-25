@@ -10,11 +10,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
-import static me.serbob.toastedafk.Managers.ValuesManager.expTimer;
-import static me.serbob.toastedafk.Managers.ValuesManager.levelTimer;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import static me.serbob.toastedafk.Managers.ValuesManager.*;
 
 public class OPEvents implements Listener {
+    public static Map<Player, Integer> deadLevelTimer = new ConcurrentHashMap<>();
+    public static Map<Player, Float> deadExpTimer = new ConcurrentHashMap<>();
     @EventHandler
     public void onJoin(final PlayerJoinEvent e) {
         Player p = e.getPlayer();
@@ -58,11 +63,22 @@ public class OPEvents implements Listener {
             return;
         }
         Player player = event.getEntity();
-        if(levelTimer.containsKey(player)) {
-            player.setLevel(levelTimer.get(player));
-            levelTimer.remove(player);
-            player.setExp(expTimer.get(player));
-            expTimer.remove(player);
+        if(afkTimers.containsKey(player)) {
+            deadLevelTimer.put(player,levelTimer.get(player));
+            deadExpTimer.put(player,expTimer.get(player));
+            afkTimers.remove(player);
+        }
+        player.setExp(0);
+        player.setLevel(0);
+    }
+    @EventHandler
+    public void onRespawn(PlayerRespawnEvent event) {
+        Player player = event.getPlayer();
+        if(deadExpTimer.containsKey(player)) {
+            player.setLevel(deadLevelTimer.get(player));
+            deadLevelTimer.remove(player);
+            player.setExp(deadExpTimer.get(player));
+            deadExpTimer.remove(player);
         }
     }
 }

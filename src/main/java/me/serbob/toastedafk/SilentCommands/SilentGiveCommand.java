@@ -30,10 +30,6 @@ public class SilentGiveCommand implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "Invalid player!");
             return false;
         }
-        if (victim.getInventory().firstEmpty() == -1) {
-            victim.sendMessage(AFKUtil.c(ToastedAFK.instance.getConfig().getString("silent_player_inventory_full")));
-            return false;
-        }
         int amount = 1;
         String itemString = args[1];
         ItemStack item;
@@ -56,11 +52,17 @@ public class SilentGiveCommand implements CommandExecutor {
             return false;
         }
         if (args.length < 3) {
-            victim.getInventory().addItem(item);
+            if (victim.getInventory().firstEmpty() == -1 && !victim.getInventory().addItem(item).isEmpty()) {
+                victim.sendMessage(AFKUtil.c(ToastedAFK.instance.getConfig().getString("silent_player_inventory_full")));
+                return false;
+            }
         } else if (args.length < 4) {
             amount = Integer.parseInt(args[2]);
             item.setAmount(amount);
-            victim.getInventory().addItem(item);
+            if (victim.getInventory().firstEmpty() == -1 && !victim.getInventory().addItem(item).isEmpty()) {
+                victim.sendMessage(AFKUtil.c(ToastedAFK.instance.getConfig().getString("silent_player_inventory_full")));
+                return false;
+            }
         }
         return true;
     }
