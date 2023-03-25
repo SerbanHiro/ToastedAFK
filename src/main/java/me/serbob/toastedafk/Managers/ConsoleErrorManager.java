@@ -10,7 +10,6 @@ import static org.bukkit.Bukkit.getLogger;
 
 public class ConsoleErrorManager {
     public static void checkErrors() {
-        checkForLP();
         checkForUpdate();
     }
     public static void checkForUpdate() {
@@ -29,23 +28,5 @@ public class ConsoleErrorManager {
                 Logger.log(Logger.LogLevel.OUTLINE,  AFKUtil.c("⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯"));
             }
         });
-    }
-    public static void checkForLP() {
-        if(ToastedAFK.instance.getServer().getPluginManager().getPlugin("LuckPerms")==null||
-                !ToastedAFK.instance.getServer().getPluginManager().getPlugin("LuckPerms").isEnabled()) {
-            Logger.log(Logger.LogLevel.ERROR, AFKUtil.c("&cLuckPerms doesn't exist! Rank rewards disabled! (Just default one enabled)"));
-        } else {
-            classImport();
-        }
-    }
-    public static void classImport() {
-        try {
-            // Import the LuckPerms API class
-            Class<?> luckPermsClass = Class.forName("net.luckperms.api.LuckPermsProvider");
-            // Do other LuckPerms-related tasks here
-        } catch (ClassNotFoundException e) {
-            getLogger().warning("Failed to import LuckPerms API class!");
-            e.printStackTrace();
-        }
     }
 }

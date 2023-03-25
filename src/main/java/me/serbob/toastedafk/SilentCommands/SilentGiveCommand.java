@@ -10,10 +10,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.yaml.snakeyaml.Yaml;
-
-import java.io.StringReader;
-import java.util.Map;
 
 public class SilentGiveCommand implements CommandExecutor {
     @Override
@@ -40,7 +36,7 @@ public class SilentGiveCommand implements CommandExecutor {
         if(ToastedAFK.instance.getConfig().getConfigurationSection("items").getKeys(false).contains(itemString)) {
             item = ToastedAFK.instance.getConfig().getItemStack("items."+itemString);
         } else {
-            Material material = Material.valueOf(args[1]);
+            Material material = Material.valueOf(args[1].toUpperCase());
             if(material==null) {
                 sender.sendMessage(ChatColor.RED + "INVALID ITEM");
                 return false;
@@ -52,14 +48,14 @@ public class SilentGiveCommand implements CommandExecutor {
             return false;
         }
         if (args.length < 3) {
-            if (victim.getInventory().firstEmpty() == -1 && !victim.getInventory().addItem(item).isEmpty()) {
+            if (!victim.getInventory().addItem(item).isEmpty() && victim.getInventory().firstEmpty() == -1) {
                 victim.sendMessage(AFKUtil.c(ToastedAFK.instance.getConfig().getString("silent_player_inventory_full")));
                 return false;
             }
         } else if (args.length < 4) {
             amount = Integer.parseInt(args[2]);
             item.setAmount(amount);
-            if (victim.getInventory().firstEmpty() == -1 && !victim.getInventory().addItem(item).isEmpty()) {
+            if (!victim.getInventory().addItem(item).isEmpty() && victim.getInventory().firstEmpty() == -1) {
                 victim.sendMessage(AFKUtil.c(ToastedAFK.instance.getConfig().getString("silent_player_inventory_full")));
                 return false;
             }

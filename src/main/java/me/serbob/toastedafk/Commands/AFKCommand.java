@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
 
 import static me.serbob.toastedafk.Managers.ValuesManager.*;
 import static me.serbob.toastedafk.Managers.ValuesManager.tempLoc2;
@@ -181,7 +182,7 @@ public class AFKCommand implements CommandExecutor {
         wand = new ItemStack(Material.STONE_AXE);
         ItemMeta wandMeta = wand.getItemMeta();
         wandMeta.setDisplayName(AFKUtil.c("&dAFK Wand"));
-        wandMeta.setLocalizedName("AFKWand");
+        wandMeta.setLore(Arrays.asList(AFKUtil.c("&cSet position 1 and 2 with this magic wand!")));
         wand.setItemMeta(wandMeta);
 
         player.getInventory().addItem(wand);

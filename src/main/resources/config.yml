@@ -25,6 +25,19 @@ region:
 # MESSAGES AND SOME CONFIGURATIONS ABOUT REGION
 show_xp_bar: true # when player is inside region it will show them (BETA)
 silent_player_inventory_full: "&cYour inventory is full, therefore you will not receive anything!"
+actionbar:
+  show: false
+  messages:
+    sg_day: " day, "
+    pl_day: " days, "
+    sg_hour: " hour, "
+    pl_hour: " hours, "
+    sg_minute: " minute, "
+    pl_minute: " minutes, "
+    0_seconds: " Resetting!"
+    sg_second: " second."
+    pl_second: " seconds."
+    before_msg: "{player} has been afk for >> "
 
 commands: # silent commands: use sgive to give players items without showing anything in console
           # btw, ONLY with sgive you will be able to give items with NBT tags if players are afk
