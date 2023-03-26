@@ -1,23 +1,23 @@
 package me.serbob.toastedafk.Utils;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class RegionUtils {
     /**public static boolean getPlayersInRegion(Location playerslocation, String checkingRegion, JavaPlugin plugin1) {
-        com.sk89q.worldedit.util.Location loc = BukkitAdapter.adapt(playerslocation);
-        RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
-        RegionQuery query = container.createQuery();
-        ApplicableRegionSet set = query.getApplicableRegions(loc);
+        com.sk89q.worldedit.util.Location loc = com.sk89q.worldedit.bukkit.BukkitAdapter.adapt(playerslocation);
+        com.sk89q.worldguard.protection.regions.RegionContainer container = com.sk89q.worldguard.WorldGuard.getInstance().getPlatform().getRegionContainer();
+        com.sk89q.worldguard.protection.regions.RegionQuery query = container.createQuery();
+        com.sk89q.worldguard.protection.ApplicableRegionSet set = query.getApplicableRegions(loc);
 
         int players = 0;
 
-        for(ProtectedRegion region : set.getRegions()) {
+        for(com.sk89q.worldguard.protection.regions.ProtectedRegion region : set.getRegions()) {
             if(region.getId().equalsIgnoreCase(checkingRegion)) {
-                System.out.println("test");
-
                 for(Player player : plugin1.getServer().getOnlinePlayers()) {
-                    BlockVector3 min = region.getMinimumPoint();
-                    BlockVector3 max = region.getMaximumPoint();
+                    com.sk89q.worldedit.math.BlockVector3 min = region.getMinimumPoint();
+                    com.sk89q.worldedit.math.BlockVector3 max = region.getMaximumPoint();
 
 
                     Location locMin = new Location(playerslocation.getWorld(), min.getX(), min.getY(), min.getZ());

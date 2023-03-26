@@ -51,11 +51,7 @@ public class AFKCore {
                         TIMEOUT_SECONDS = rankTime.get(rank);
                     }
                 }*/
-
-                if(afkTimers.containsKey(player)) {
-                    if(ToastedAFK.instance.getConfig().getBoolean("actionbar.show")) {
-                        formatActionBar(player);
-                    }
+                if(!afkTimers.containsKey(player)) {
                     for (String key : ToastedAFK.instance.getConfig().getConfigurationSection("afk_times").getKeys(false)) {
                         if (player.hasPermission("afk.perm." + key)) {
                             int perm_time = ToastedAFK.instance.getConfig().getInt("afk_times." + key);
@@ -64,9 +60,6 @@ public class AFKCore {
                             }
                         }
                     }
-                }
-
-                if(!afkTimers.containsKey(player)) {
                     afkTimers.put(player, TIMEOUT_SECONDS);
                     if(ToastedAFK.instance.getConfig().getBoolean("show_xp_bar")) {
                         if(!levelTimer.containsKey(player)) {
@@ -77,7 +70,11 @@ public class AFKCore {
                         }
                         player.setExp(1.0f);
                     }
-
+                }
+                if(afkTimers.containsKey(player)) {
+                    if(ToastedAFK.instance.getConfig().getBoolean("actionbar.show")) {
+                        formatActionBar(player);
+                    }
                 }
             } else {
                 if(ToastedAFK.instance.getConfig().getBoolean("show_xp_bar")) {

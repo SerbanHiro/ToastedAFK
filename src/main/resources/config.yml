@@ -6,6 +6,7 @@
 #    -> (if you want to give custom items from the items(configuration section) you will need to put the name inside { }
 #    -> e.g.: /sgive {player} {test3} 2
 # DOCS END #
+worldguard_region: ""
 check_for_update: true # if a new update on spigot is released, you'll get a message in console and ingame
 default_afk_time: 1200 # in seconds
 afk_times: # name of permissions here
@@ -37,7 +38,7 @@ actionbar:
     0_seconds: " Resetting!"
     sg_second: " second."
     pl_second: " seconds."
-    before_msg: "{player} has been afk for >> "
+    before_msg: "{player} >> time left >> "
 
 commands: # silent commands: use sgive to give players items without showing anything in console
           # btw, ONLY with sgive you will be able to give items with NBT tags if players are afk
