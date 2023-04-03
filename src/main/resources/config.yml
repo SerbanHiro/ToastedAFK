@@ -6,7 +6,7 @@
 #    -> (if you want to give custom items from the items(configuration section) you will need to put the name inside { }
 #    -> e.g.: /sgive {player} {test3} 2
 # DOCS END #
-worldguard_region: ""
+worldguard_region: "" # DO NOT USE, IT WILL NOT WORK
 check_for_update: true # if a new update on spigot is released, you'll get a message in console and ingame
 default_afk_time: 1200 # in seconds
 afk_times: # name of permissions here
@@ -25,6 +25,7 @@ region:
 
 # MESSAGES AND SOME CONFIGURATIONS ABOUT REGION
 show_xp_bar: true # when player is inside region it will show them (BETA)
+save_xp_inside_region: false
 silent_player_inventory_full: "&cYour inventory is full, therefore you will not receive anything!"
 actionbar:
   show: false

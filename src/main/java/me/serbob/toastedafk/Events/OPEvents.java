@@ -6,6 +6,7 @@ import me.serbob.toastedafk.Utils.Settings;
 import me.serbob.toastedafk.Utils.UpdateChecker;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -18,8 +19,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import static me.serbob.toastedafk.Managers.ValuesManager.*;
 
 public class OPEvents implements Listener {
-    public static Map<Player, Integer> deadLevelTimer = new ConcurrentHashMap<>();
-    public static Map<Player, Float> deadExpTimer = new ConcurrentHashMap<>();
     @EventHandler
     public void onJoin(final PlayerJoinEvent e) {
         Player p = e.getPlayer();
@@ -44,7 +43,7 @@ public class OPEvents implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        if(ToastedAFK.instance.getConfig().getBoolean("show_xp_bar")==false) {
+        if(!ToastedAFK.instance.getConfig().getBoolean("show_xp_bar")) {
             return;
         }
         if(levelTimer.containsKey(player)) {
@@ -53,32 +52,19 @@ public class OPEvents implements Listener {
             player.setExp(expTimer.get(player));
             expTimer.remove(player);
         }
+        afkTimers.remove(player);
     }
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
-        if(!(event.getEntity() instanceof Player)) {
-            return;
-        }
-        if(ToastedAFK.instance.getConfig().getBoolean("show_xp_bar")==false) {
-            return;
+        if(!ToastedAFK.instance.getConfig().getBoolean("show_xp_bar")) {
+            if(!ToastedAFK.instance.getConfig().getBoolean("save_xp_inside_region")) {
+                return;
+            }
         }
         Player player = event.getEntity();
         if(afkTimers.containsKey(player)) {
-            deadLevelTimer.put(player,levelTimer.get(player));
-            deadExpTimer.put(player,expTimer.get(player));
             afkTimers.remove(player);
-        }
-        player.setExp(0);
-        player.setLevel(0);
-    }
-    @EventHandler
-    public void onRespawn(PlayerRespawnEvent event) {
-        Player player = event.getPlayer();
-        if(deadExpTimer.containsKey(player)) {
-            player.setLevel(deadLevelTimer.get(player));
-            deadLevelTimer.remove(player);
-            player.setExp(deadExpTimer.get(player));
-            deadExpTimer.remove(player);
+            event.setDroppedExp(0);
         }
     }
 }
