@@ -1,5 +1,6 @@
 package me.serbob.toastedafk.Commands;
 
+import me.serbob.toastedafk.Managers.CommandsManager;
 import me.serbob.toastedafk.Managers.ValuesManager;
 import me.serbob.toastedafk.ToastedAFK;
 import me.serbob.toastedafk.Utils.AFKUtil;
@@ -155,6 +156,7 @@ public class AFKCommand implements CommandExecutor {
             e.printStackTrace();
         }
         ValuesManager.loadConfigValues();
+        CommandsManager.loadCommands();
     }
     public void saveCommand(Player player) {
         configFile = new File(ToastedAFK.instance.getDataFolder(),"config.yml");

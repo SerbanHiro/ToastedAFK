@@ -29,12 +29,16 @@ public class AFKCore {
             if(ToastedAFK.instance.getConfig().getBoolean("show_xp_bar")) {
                 player.setLevel(afkTimers.get(player));
             }
-            if (timeLeft-- <= 0) {
-                commands.forEach(command -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("{player}", player.getName())));
-                afkTimers.remove(player);
-            } else {
-                afkTimers.put(player, timeLeft);
-            }
+         //   if(afkTimers.containsKey(player)) {
+                if (timeLeft-- <= 0) {
+                    commands.forEach(command -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("{player}", player.getName())));
+                    afkTimers.remove(player);
+                } else {
+                    afkTimers.replace(player,timeLeft);
+                }
+          //  } else {
+          //     afkTimers.remove(player);
+          //  }
         });
     }
     public void addOrRemovePlayers() {
@@ -60,15 +64,17 @@ public class AFKCore {
                             }
                         }
                     }
-                    afkTimers.put(player, TIMEOUT_SECONDS);
-                    if(ToastedAFK.instance.getConfig().getBoolean("show_xp_bar")) {
+                    afkTimers.putIfAbsent(player, TIMEOUT_SECONDS);
+                    if(ToastedAFK.instance.getConfig().getBoolean("save_xp_inside_region")) {
                         if(!levelTimer.containsKey(player)) {
-                            levelTimer.put(player, player.getLevel());
+                            levelTimer.putIfAbsent(player, player.getLevel());
                         }
                         if(!expTimer.containsKey(player)) {
-                            expTimer.put(player, player.getExp());
+                            expTimer.putIfAbsent(player, player.getExp());
                         }
-                        player.setExp(1.0f);
+                        if(ToastedAFK.instance.getConfig().getBoolean("show_xp_bar")) {
+                            player.setExp(1.0f);
+                        }
                     }
                 }
                 if(afkTimers.containsKey(player)) {
@@ -77,11 +83,13 @@ public class AFKCore {
                     }
                 }
             } else {
-                if(ToastedAFK.instance.getConfig().getBoolean("show_xp_bar")) {
-                    if (levelTimer.containsKey(player)) {
-                        player.setLevel(levelTimer.get(player));
-                        player.setExp(expTimer.get(player));
-                    }
+                if(ToastedAFK.instance.getConfig().getBoolean("save_xp_inside_region")) {
+                    //if(ToastedAFK.instance.getConfig().getBoolean("show_xp_bar")) {
+                        if (levelTimer.containsKey(player)) {
+                            player.setLevel(levelTimer.get(player));
+                            player.setExp(expTimer.get(player));
+                        }
+                   // }
                     levelTimer.remove(player);
                     expTimer.remove(player);
                 }

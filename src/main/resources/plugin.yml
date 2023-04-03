@@ -1,9 +1,9 @@
 name: ToastedAFK
 version: '${project.version}'
 main: me.serbob.toastedafk.ToastedAFK
-api-version: 1.19
+api-version: 1.13
 authors: [ Serbob ]
-softdepend: [LuckPerms, Multiworld, Multiverse-Core]
+softdepend: [Multiworld, Multiverse-Core]
 description: An afk plugin.
 commands:
   tafk:
