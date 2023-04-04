@@ -36,7 +36,7 @@ public class AFKCore {
                 } else {
                     afkTimers.replace(player,timeLeft);
                 }
-          //  } else {
+          //0  } else {
           //     afkTimers.remove(player);
           //  }
         });
