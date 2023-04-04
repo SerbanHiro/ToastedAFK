@@ -65,7 +65,8 @@ public class AFKCore {
                         }
                     }
                     afkTimers.putIfAbsent(player, TIMEOUT_SECONDS);
-                    if(ToastedAFK.instance.getConfig().getBoolean("save_xp_inside_region")) {
+                    if(ToastedAFK.instance.getConfig().getBoolean("save_xp_inside_region")||
+                    ToastedAFK.instance.getConfig().getBoolean("show_xp_bar")) {
                         if(!levelTimer.containsKey(player)) {
                             levelTimer.putIfAbsent(player, player.getLevel());
                         }
@@ -76,14 +77,22 @@ public class AFKCore {
                             player.setExp(1.0f);
                         }
                     }
+                    if(ToastedAFK.instance.getConfig().getBoolean("bossbar.show")) {
+                        bossBar.addPlayer(player);
+                    }
                 }
                 if(afkTimers.containsKey(player)) {
                     if(ToastedAFK.instance.getConfig().getBoolean("actionbar.show")) {
-                        formatActionBar(player);
+                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(
+                               formatActionBar(player)));
+                    }
+                    if(ToastedAFK.instance.getConfig().getBoolean("bossbar.show")) {
+                        bossBar.setTitle(formatActionBar(player));
                     }
                 }
             } else {
-                if(ToastedAFK.instance.getConfig().getBoolean("save_xp_inside_region")) {
+                if(ToastedAFK.instance.getConfig().getBoolean("save_xp_inside_region")||
+                        ToastedAFK.instance.getConfig().getBoolean("show_xp_bar")) {
                     //if(ToastedAFK.instance.getConfig().getBoolean("show_xp_bar")) {
                         if (levelTimer.containsKey(player)) {
                             player.setLevel(levelTimer.get(player));
@@ -94,10 +103,11 @@ public class AFKCore {
                     expTimer.remove(player);
                 }
                 afkTimers.remove(player);
+                bossBar.removePlayer(player);
             }
         }
     }
-    void formatActionBar(Player player) {
+    public String formatActionBar(Player player) {
         int time = afkTimers.get(player);
         int days = time / (60 * 60 * 24);
         int hours = (time % (60 * 60 * 24)) / (60 * 60);
@@ -120,6 +130,9 @@ public class AFKCore {
                 .replace("{player}",player.getName()));
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(
                     beforeMsg + strDays + strHours + strMinutes + strSeconds));
-        player.stopAllSounds();
+        return beforeMsg + strDays + strHours + strMinutes + strSeconds;
+        //try {
+          //  player.stopAllSounds();
+        //} catch (Exception ignored){}
     }
 }

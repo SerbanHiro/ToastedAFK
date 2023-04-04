@@ -3,7 +3,9 @@ package me.serbob.toastedafk;
 import jdk.jpackage.internal.Log;
 import me.serbob.toastedafk.Managers.AFKManager;
 import me.serbob.toastedafk.Managers.ValuesManager;
+import me.serbob.toastedafk.Placeholders.TimerPlaceHolder;
 import me.serbob.toastedafk.Utils.Logger;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -28,6 +30,9 @@ public final class ToastedAFK extends JavaPlugin {
             ValuesManager.loadConfigValues();
             AFKManager.start();
         });
+        if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new TimerPlaceHolder().register();
+        }
     }
     @Override
     public void onDisable() {
@@ -44,5 +49,6 @@ public final class ToastedAFK extends JavaPlugin {
             player.setExp(exp);
             expTimer.remove(player);
         }
+        bossBar.removeAll();
     }
 }

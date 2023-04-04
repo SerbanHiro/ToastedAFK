@@ -24,6 +24,7 @@ region:
       z: z
 
 # MESSAGES AND SOME CONFIGURATIONS ABOUT REGION
+placeholder_not_in_afk_region: "Not in AFK Zone"
 show_xp_bar: true # when player is inside region it will show them (BETA)
 save_xp_inside_region: false
 silent_player_inventory_full: "&cYour inventory is full, therefore you will not receive anything!"
@@ -40,13 +41,20 @@ actionbar:
     sg_second: " second."
     pl_second: " seconds."
     before_msg: "{player} >> time left >> "
-
+bossbar: # To update the bossbar using /afk reload, you will need to do it forced /afk reload force
+  show: false
+  color: "RED"
+  style: "SOLID"
+  text: "Idk"
 commands: # silent commands: use sgive to give players items without showing anything in console
           # btw, ONLY with sgive you will be able to give items with NBT tags if players are afk
           # usage: /silentgive (or sgive) {player} (if it's consolesender then you can put the name from items inside {})
   - "msg {player} you were afk!"
   - "eco give {player} 100"
   - "silentgive {player} {test3}"
+on_command_deny: "&cYou cannot use this command here"
+denied_commands:
+  - "/shop"
 items:
   test3:
     ==: org.bukkit.inventory.ItemStack

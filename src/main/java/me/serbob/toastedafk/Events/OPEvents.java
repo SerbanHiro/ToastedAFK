@@ -43,6 +43,8 @@ public class OPEvents implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
+        afkTimers.remove(player);
+        bossBar.removePlayer(player);
         if(!ToastedAFK.instance.getConfig().getBoolean("show_xp_bar")) {
             return;
         }
@@ -52,7 +54,6 @@ public class OPEvents implements Listener {
             player.setExp(expTimer.get(player));
             expTimer.remove(player);
         }
-        afkTimers.remove(player);
     }
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
@@ -64,6 +65,7 @@ public class OPEvents implements Listener {
         Player player = event.getEntity();
         if(afkTimers.containsKey(player)) {
             afkTimers.remove(player);
+            bossBar.removePlayer(player);
             event.setDroppedExp(0);
         }
     }
