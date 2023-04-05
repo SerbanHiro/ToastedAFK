@@ -41,7 +41,7 @@ actionbar:
     sg_second: " second."
     pl_second: " seconds."
     before_msg: "{player} >> time left >> "
-bossbar: # To update the bossbar using /afk reload, you will need to do it forced /afk reload force
+bossbar: # The bossbar will automatically update if you use the command /afk bossbar ...
   show: false
   color: "RED"
   style: "SOLID"
