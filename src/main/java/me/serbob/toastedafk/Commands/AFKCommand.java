@@ -73,7 +73,11 @@ public class AFKCommand implements CommandExecutor {
                     reloadCommand((Player) sender);
                 } else if(args[1].equalsIgnoreCase("force")) {
                     reloadCommand((Player) sender);
-                    afkTimers.clear();
+                    playerStats.clear();
+                    if(ToastedAFK.instance.getConfig().getBoolean("bossbar.show")) {
+                        bossBar.removeAll();
+                    }
+                   // afkTimers.clear();
                 }
                 sender.sendMessage(AFKUtil.c("&aAFK config.yml reloaded!"));
             } else {
@@ -129,8 +133,8 @@ public class AFKCommand implements CommandExecutor {
             sender.sendMessage(player.getItemInHand()+"");
             System.out.println(player.getItemInHand()+"");
         } else if(args[0].equalsIgnoreCase("list")) {
-            sender.sendMessage(ChatColor.GREEN + "Total players AFK: "+afkTimers.size());
-            sender.sendMessage(ChatColor.GREEN + "List: "+afkTimers);
+            sender.sendMessage(ChatColor.GREEN + "Total players AFK: "+playerStats.size());
+            sender.sendMessage(ChatColor.GREEN + "List: "+playerStats);
         } else if(args[0].equalsIgnoreCase("bossbar")) {
             File configFile = new File(ToastedAFK.instance.getDataFolder(),"config.yml");
             YamlConfiguration file = YamlConfiguration.loadConfiguration(configFile);

@@ -1,5 +1,6 @@
 package me.serbob.toastedafk.Functions;
 
+import me.serbob.toastedafk.Classes.PlayerStats;
 import me.serbob.toastedafk.ToastedAFK;
 import me.serbob.toastedafk.Utils.*;
 import net.md_5.bungee.api.ChatMessageType;
@@ -25,20 +26,17 @@ public class AFKCore {
     }
     public void regionCheck() {
         List<String> commands = ToastedAFK.instance.getConfig().getStringList("commands");
-        afkTimers.forEach((player, timeLeft) -> {
-            if(ToastedAFK.instance.getConfig().getBoolean("show_xp_bar")) {
-                player.setLevel(afkTimers.get(player));
-            }
+        playerStats.forEach((player, playerStatistics) -> {
          //   if(afkTimers.containsKey(player)) {
-                if (timeLeft-- <= 0) {
-                    commands.forEach(command -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("{player}", player.getName())));
-                    afkTimers.remove(player);
-                } else {
-                    afkTimers.replace(player,timeLeft);
-                }
-          //0  } else {
-          //     afkTimers.remove(player);
-          //  }
+            int timeLeft = playerStatistics.getAfkTimer();
+            if (timeLeft-- <= 0) {
+                commands.forEach(command -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("{player}", player.getName())));
+                // afkTimers.remove(player);
+                playerStatistics.setAfkTimer(playerStatistics.getDefaultAfkTime());
+            } else {
+                //afkTimers.replace(player,timeLeft);
+                playerStatistics.setAfkTimer(timeLeft);
+            }
         });
     }
     public void addOrRemovePlayers() {
@@ -55,7 +53,7 @@ public class AFKCore {
                         TIMEOUT_SECONDS = rankTime.get(rank);
                     }
                 }*/
-                if(!afkTimers.containsKey(player)) {
+                if(!playerStats.containsKey(player)) {
                     for (String key : ToastedAFK.instance.getConfig().getConfigurationSection("afk_times").getKeys(false)) {
                         if (player.hasPermission("afk.perm." + key)) {
                             int perm_time = ToastedAFK.instance.getConfig().getInt("afk_times." + key);
@@ -64,15 +62,18 @@ public class AFKCore {
                             }
                         }
                     }
-                    afkTimers.putIfAbsent(player, TIMEOUT_SECONDS);
+                    //afkTimers.putIfAbsent(player, TIMEOUT_SECONDS);
+                    playerStats.putIfAbsent(player,new PlayerStats(TIMEOUT_SECONDS,TIMEOUT_SECONDS,player.getLevel(),player.getExp(),
+                            ToastedAFK.instance.getConfig().getBoolean("save_xp_inside_region")));
+
                     if(ToastedAFK.instance.getConfig().getBoolean("save_xp_inside_region")||
                     ToastedAFK.instance.getConfig().getBoolean("show_xp_bar")) {
-                        if(!levelTimer.containsKey(player)) {
+                       /** if(!levelTimer.containsKey(player)) {
                             levelTimer.putIfAbsent(player, player.getLevel());
                         }
                         if(!expTimer.containsKey(player)) {
                             expTimer.putIfAbsent(player, player.getExp());
-                        }
+                        }*/
                         if(ToastedAFK.instance.getConfig().getBoolean("show_xp_bar")) {
                             player.setExp(1.0f);
                         }
@@ -81,34 +82,46 @@ public class AFKCore {
                         bossBar.addPlayer(player);
                     }
                 }
-                if(afkTimers.containsKey(player)) {
+                if(playerStats.containsKey(player)) {
                     if(ToastedAFK.instance.getConfig().getBoolean("actionbar.show")) {
                         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(
                                formatActionBar(player)));
                     }
                     if(ToastedAFK.instance.getConfig().getBoolean("bossbar.show")) {
-                        bossBar.setTitle(formatActionBar(player));
+                        if(ToastedAFK.instance.getConfig().getString("bossbar.text").equalsIgnoreCase("{timer}")) {
+                            bossBar.setTitle(formatActionBar(player));
+                        } else {
+                            bossBar.setTitle(AFKUtil.c(ToastedAFK.instance.getConfig().getString("bossbar.text")));
+                        }
+                    }
+                    if(ToastedAFK.instance.getConfig().getBoolean("show_xp_bar")) {
+                        player.setLevel(playerStats.get(player).getAfkTimer());
                     }
                 }
             } else {
                 if(ToastedAFK.instance.getConfig().getBoolean("save_xp_inside_region")||
                         ToastedAFK.instance.getConfig().getBoolean("show_xp_bar")) {
                     //if(ToastedAFK.instance.getConfig().getBoolean("show_xp_bar")) {
-                        if (levelTimer.containsKey(player)) {
-                            player.setLevel(levelTimer.get(player));
-                            player.setExp(expTimer.get(player));
-                        }
+                    if(playerStats.containsKey(player)) {
+                        player.setLevel(playerStats.get(player).getLevelTimer());
+                        player.setExp(playerStats.get(player).getExpTimer());
+                    }
                    // }
-                    levelTimer.remove(player);
-                    expTimer.remove(player);
+                  //  levelTimer.remove(player);
+                  //  expTimer.remove(player);
+                    //playerStats.remove(player);
                 }
-                afkTimers.remove(player);
-                bossBar.removePlayer(player);
+                if(playerStats.containsKey(player)) {
+                    playerStats.remove(player);
+                }
+                if(ToastedAFK.instance.getConfig().getBoolean("bossbar.show")) {
+                    bossBar.removePlayer(player);
+                }
             }
         }
     }
     public String formatActionBar(Player player) {
-        int time = afkTimers.get(player);
+        int time = playerStats.get(player).getAfkTimer();
         int days = time / (60 * 60 * 24);
         int hours = (time % (60 * 60 * 24)) / (60 * 60);
         int minutes = (time % (60 * 60)) / 60;

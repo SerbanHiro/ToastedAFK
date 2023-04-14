@@ -43,16 +43,17 @@ public class OPEvents implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        afkTimers.remove(player);
-        bossBar.removePlayer(player);
-        if(!ToastedAFK.instance.getConfig().getBoolean("show_xp_bar")) {
-            return;
+        if(ToastedAFK.instance.getConfig().getBoolean("show_xp_bar")) {
+            if(playerStats.containsKey(player)) {
+                player.setLevel(playerStats.get(player).getLevelTimer());
+                player.setExp(playerStats.get(player).getExpTimer());
+            }
         }
-        if(levelTimer.containsKey(player)) {
-            player.setLevel(levelTimer.get(player));
-            levelTimer.remove(player);
-            player.setExp(expTimer.get(player));
-            expTimer.remove(player);
+        if(playerStats.containsKey(player)) {
+            playerStats.remove(player);
+        }
+        if(ToastedAFK.instance.getConfig().getBoolean("bossbar.show")) {
+            bossBar.removePlayer(player);
         }
     }
     @EventHandler
@@ -63,9 +64,11 @@ public class OPEvents implements Listener {
             }
         }
         Player player = event.getEntity();
-        if(afkTimers.containsKey(player)) {
-            afkTimers.remove(player);
-            bossBar.removePlayer(player);
+        if(playerStats.containsKey(player)) {
+            playerStats.remove(player);
+            if(ToastedAFK.instance.getConfig().getBoolean("bossbar.show")) {
+                bossBar.removePlayer(player);
+            }
             event.setDroppedExp(0);
         }
     }

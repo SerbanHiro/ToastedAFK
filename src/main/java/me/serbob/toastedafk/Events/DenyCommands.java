@@ -7,12 +7,12 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
-import static me.serbob.toastedafk.Managers.ValuesManager.afkTimers;
+import static me.serbob.toastedafk.Managers.ValuesManager.playerStats;
 
 public class DenyCommands implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void PreProcessCommand(PlayerCommandPreprocessEvent event) {
-        if(afkTimers.containsKey(event.getPlayer())) {
+        if(playerStats.containsKey(event.getPlayer())) {
             String cmd = event.getMessage();
             if (ToastedAFK.instance.getConfig().getStringList("denied_commands").contains(cmd)) {
                 event.getPlayer().sendMessage(AFKUtil.c(ToastedAFK.instance.getConfig().getString("on_command_deny")));

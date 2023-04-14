@@ -1,6 +1,7 @@
 package me.serbob.toastedafk;
 
 import jdk.jpackage.internal.Log;
+import me.serbob.toastedafk.Classes.PlayerStats;
 import me.serbob.toastedafk.Managers.AFKManager;
 import me.serbob.toastedafk.Managers.ValuesManager;
 import me.serbob.toastedafk.Placeholders.TimerPlaceHolder;
@@ -37,7 +38,20 @@ public final class ToastedAFK extends JavaPlugin {
     @Override
     public void onDisable() {
         Logger.log(Logger.LogLevel.WARNING, "Server disabled! Giving player's exp back");
-        for(Map.Entry<Player, Integer> entry: levelTimer.entrySet()) {
+        for (Map.Entry<Player, PlayerStats> entry : playerStats.entrySet()) {
+            Player player = entry.getKey();
+            PlayerStats playerStatistic = entry.getValue();
+
+            // Use playerStats to set the player's level and other stats
+            int level = playerStatistic.getLevelTimer();
+            float exp = playerStatistic.getExpTimer();
+            player.setLevel(level);
+            player.setExp(exp);
+
+            // Remove the player's stats from the map
+            playerStats.remove(player);
+        }
+        /**for(Map.Entry<Player, Integer> entry: levelTimer.entrySet()) {
             Player player = entry.getKey();
             int level = entry.getValue();
             player.setLevel(level);
@@ -48,7 +62,9 @@ public final class ToastedAFK extends JavaPlugin {
             Float exp = entry.getValue();
             player.setExp(exp);
             expTimer.remove(player);
+        }*/
+        if(ToastedAFK.instance.getConfig().getBoolean("bossbar.show")) {
+            bossBar.removeAll();
         }
-        bossBar.removeAll();
     }
 }

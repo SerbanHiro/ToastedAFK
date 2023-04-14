@@ -9,7 +9,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import static me.serbob.toastedafk.Managers.ValuesManager.afkTimers;
+import static me.serbob.toastedafk.Managers.ValuesManager.playerStats;
 
 public class TimerPlaceHolder extends PlaceholderExpansion {
     @Override
@@ -29,14 +29,14 @@ public class TimerPlaceHolder extends PlaceholderExpansion {
 
     @Override
     public String onRequest(OfflinePlayer player, @NotNull String params) {
-        if(afkTimers.containsKey(player.getPlayer())) {
+        if(playerStats.containsKey(player.getPlayer())) {
             return formatPlaceholder(player.getPlayer());
         }
         return AFKUtil.c(ToastedAFK.instance.getConfig().getString("placeholder_not_in_afk_region"));
     }
 
     public String formatPlaceholder(Player player) {
-        int time = afkTimers.get(player);
+        int time = playerStats.get(player).getAfkTimer();
         int days = time / (60 * 60 * 24);
         int hours = (time % (60 * 60 * 24)) / (60 * 60);
         int minutes = (time % (60 * 60)) / 60;

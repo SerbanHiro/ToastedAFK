@@ -45,7 +45,7 @@ bossbar: # The bossbar will automatically update if you use the command /afk bos
   show: false
   color: "RED"
   style: "SOLID"
-  text: "Idk"
+  text: "Idk" # put {timer} if you'd like the exact same text from actionbar
 commands: # silent commands: use sgive to give players items without showing anything in console
           # btw, ONLY with sgive you will be able to give items with NBT tags if players are afk
           # usage: /silentgive (or sgive) {player} (if it's consolesender then you can put the name from items inside {})
