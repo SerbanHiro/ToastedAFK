@@ -12,14 +12,12 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ValuesManager {
-    public static Map<Player, Integer> afkTimers = new ConcurrentHashMap<>(); // map of player timers
-    public static Map<Player, Integer> levelTimer = new ConcurrentHashMap<>();
-    public static Map<Player, Float> expTimer = new ConcurrentHashMap<>();
-    public static Map<Player, PlayerStats> playerStats = new ConcurrentHashMap<>();
+    public static Map<Player, PlayerStats> playerStats = new HashMap<>();
     public static int TIMEOUT_SECONDS=1200; // 20 minutes in seconds
     public static int DEFAULT_AFK_TIME;
     public static Location loc1;

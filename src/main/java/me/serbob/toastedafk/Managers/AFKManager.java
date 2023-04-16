@@ -1,6 +1,7 @@
 package me.serbob.toastedafk.Managers;
 
 import me.serbob.toastedafk.Functions.AFKCore;
+import me.serbob.toastedafk.Templates.CoreHelpers;
 import me.serbob.toastedafk.ToastedAFK;
 import me.serbob.toastedafk.Utils.AFKUtil;
 import me.serbob.toastedafk.Utils.Logger;
@@ -26,6 +27,7 @@ public class AFKManager {
         EventsManager.loadEvents();
         CommandsManager.loadCommands();
         TabCompletersManager.loadTabCompleters();
+        CoreHelpers.readConfiguration();
         startScheduler();
         Logger.log(Logger.LogLevel.INFO, AFKUtil.c("Scheduler started!"));
     }
