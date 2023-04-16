@@ -22,6 +22,7 @@ public class AFKTabCompleter implements TabCompleter {
             list.add("item");
             list.add("check");
             list.add("bossbar");
+            list.add("list");
         } else if(args[0].equalsIgnoreCase("reload")) {
             list.add("safe");
             list.add("force");
