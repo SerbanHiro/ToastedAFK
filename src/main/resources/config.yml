@@ -6,7 +6,6 @@
 #    -> (if you want to give custom items from the items(configuration section) you will need to put the name inside { }
 #    -> e.g.: /sgive {player} {test3} 2
 # DOCS END #
-worldguard_region: "" # DO NOT USE, IT WILL NOT WORK
 check_for_update: true # if a new update on spigot is released, you'll get a message in console and ingame
 default_afk_time: 1200 # in seconds
 afk_times: # name of permissions here
@@ -41,17 +40,33 @@ actionbar:
     sg_second: " second."
     pl_second: " seconds."
     before_msg: "{player} >> time left >> "
+loading_screen: # to use this just put {loadingScreenBar} or {loadingScreenPercentage}
+  totalTiles: 10
+  symbol: "|"
+  loading_color: "&7"
+  loading_complete: "&a"
 bossbar: # The bossbar will automatically update if you use the command /afk bossbar ...
   show: false
   color: "RED"
   style: "SOLID"
   text: "Idk" # put {timer} if you'd like the exact same text from actionbar
+title_screen:
+  show: true
+  title: "&7[{loadingScreenBar}&7]"
+  subtitle: "&c{loadingScreenPercentage}"
+
 commands: # silent commands: use sgive to give players items without showing anything in console
           # btw, ONLY with sgive you will be able to give items with NBT tags if players are afk
           # usage: /silentgive (or sgive) {player} (if it's consolesender then you can put the name from items inside {})
   - "msg {player} you were afk!"
   - "eco give {player} 100"
   - "silentgive {player} {test3}"
+random_commands:
+  times: 2 # how many times should the algorithm shuffle and give 1 command from the list
+  list:
+    - "msg {player} random 1"
+    - "msg {player} random 2"
+    - "msg {player} random 3"
 on_command_deny: "&cYou cannot use this command here"
 denied_commands:
   - "/shop"

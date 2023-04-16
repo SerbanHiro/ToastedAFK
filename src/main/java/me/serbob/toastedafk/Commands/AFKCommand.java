@@ -3,6 +3,7 @@ package me.serbob.toastedafk.Commands;
 import me.serbob.toastedafk.Functions.AFKCore;
 import me.serbob.toastedafk.Managers.CommandsManager;
 import me.serbob.toastedafk.Managers.ValuesManager;
+import me.serbob.toastedafk.Templates.LoadingScreen;
 import me.serbob.toastedafk.ToastedAFK;
 import me.serbob.toastedafk.Utils.AFKUtil;
 import org.bukkit.Bukkit;
@@ -195,7 +196,7 @@ public class AFKCommand implements CommandExecutor {
         }
         ValuesManager.loadConfigValues();
         CommandsManager.loadCommands();
-
+        LoadingScreen.initializeLoadingScreen();
     }
     public void saveCommand(Player player) {
         configFile = new File(ToastedAFK.instance.getDataFolder(),"config.yml");
