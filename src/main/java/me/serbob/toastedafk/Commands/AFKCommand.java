@@ -173,6 +173,8 @@ public class AFKCommand implements CommandExecutor {
         sender.sendMessage(ChatColor.RED + "You do not have permission to use this command!");
     }
     public void reloadCommand(Player player) {
+        if(CoreHelpers.bossBarShow)
+            bossBar.removeAll();
         try {
 
             // Create temporary file to hold new configuration
@@ -198,8 +200,6 @@ public class AFKCommand implements CommandExecutor {
         ValuesManager.loadConfigValues();
         CommandsManager.loadCommands();
         LoadingScreen.initializeLoadingScreen();
-        if(CoreHelpers.bossBarShow)
-            bossBar.removeAll();
     }
     public void saveCommand(Player player) {
         configFile = new File(ToastedAFK.instance.getDataFolder(),"config.yml");
