@@ -6,20 +6,7 @@ import me.serbob.toastedafk.Templates.LoadingScreen;
 import me.serbob.toastedafk.ToastedAFK;
 import me.serbob.toastedafk.Utils.AFKUtil;
 import me.serbob.toastedafk.Utils.Logger;
-import me.serbob.toastedafk.Utils.RegionUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
 
 public class AFKManager {
     public static void start() {
@@ -42,9 +29,7 @@ public class AFKManager {
         }, 0L, 20L);
     }
     public static void registerPermissions() {
-        ConfigurationSection permSection = ToastedAFK.instance.getConfig().getConfigurationSection("afk_times");
-        Set<String> perms = permSection.getKeys(false);
-        for (String perm : perms) {
+        for (String perm : ToastedAFK.instance.getConfig().getConfigurationSection("afk_times").getKeys(false)) {
             String permissionName = "afk.perm." + perm.toLowerCase();
             if(ToastedAFK.instance.getServer().getPluginManager().getPermission(permissionName)==null) {
                 Permission permission = new Permission(permissionName);

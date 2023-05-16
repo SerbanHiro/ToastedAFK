@@ -40,18 +40,15 @@ public class OPEvents implements Listener {
             }
         }
     }
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
+        if(!playerStats.containsKey(player)) return;
         if(ToastedAFK.instance.getConfig().getBoolean("show_xp_bar")) {
-            if(playerStats.containsKey(player)) {
-                player.setLevel(playerStats.get(player).getLevelTimer());
-                player.setExp(playerStats.get(player).getExpTimer());
-            }
+            player.setLevel(playerStats.get(player).getLevelTimer());
+            player.setExp(playerStats.get(player).getExpTimer());
         }
-        if(playerStats.containsKey(player)) {
-            playerStats.remove(player);
-        }
+        playerStats.remove(player);
         if(ToastedAFK.instance.getConfig().getBoolean("bossbar.show")) {
             bossBar.removePlayer(player);
         }

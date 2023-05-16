@@ -67,6 +67,16 @@ random_commands:
     - "msg {player} random 1"
     - "msg {player} random 2"
     - "msg {player} random 3"
+probability_commands:
+  first_prob:
+    command: "msg {player} 50%"
+    chance: 50.0
+  second_prob:
+    command: "msg {player} 35%"
+    chance : 35.0
+  third_prob:
+    command: "msg {player} 15%"
+    chance: 15.0
 on_command_deny: "&cYou cannot use this command here"
 denied_commands:
   - "/shop"
@@ -74,7 +84,7 @@ items:
   test3:
     ==: org.bukkit.inventory.ItemStack
     v: 3218
-    type: NETHERITE_SWORD
+    type: STONE_AXE
     meta:
       ==: ItemMeta
       meta-type: UNSPECIFIC

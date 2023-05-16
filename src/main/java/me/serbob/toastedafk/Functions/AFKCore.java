@@ -3,6 +3,7 @@ package me.serbob.toastedafk.Functions;
 import me.serbob.toastedafk.Classes.PlayerStats;
 import me.serbob.toastedafk.Templates.ActionBar;
 import me.serbob.toastedafk.Templates.CoreHelpers;
+import me.serbob.toastedafk.Templates.ItemDistribution;
 import me.serbob.toastedafk.ToastedAFK;
 import me.serbob.toastedafk.Utils.*;
 import net.md_5.bungee.api.ChatMessageType;
@@ -38,6 +39,7 @@ public class AFKCore {
             if (timeLeft-- <= 0) {
                 CoreHelpers.executeCommands(player);
                 CoreHelpers.executeRandomCommands(player);
+                ItemDistribution.distributeCommands(player);
                 playerStatistics.setAfkTimer(playerStatistics.getDefaultAfkTime());
             } else {
                 playerStatistics.setAfkTimer(timeLeft);

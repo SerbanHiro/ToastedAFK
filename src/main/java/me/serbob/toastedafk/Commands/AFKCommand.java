@@ -1,5 +1,6 @@
 package me.serbob.toastedafk.Commands;
 
+import me.serbob.toastedafk.Classes.PlayerStats;
 import me.serbob.toastedafk.Functions.AFKCore;
 import me.serbob.toastedafk.Managers.CommandsManager;
 import me.serbob.toastedafk.Managers.ValuesManager;
@@ -29,6 +30,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Map;
 
 import static me.serbob.toastedafk.Managers.ValuesManager.*;
 import static me.serbob.toastedafk.Managers.ValuesManager.tempLoc2;
@@ -76,6 +79,21 @@ public class AFKCommand implements CommandExecutor {
                     reloadCommand((Player) sender);
                 } else if(args[1].equalsIgnoreCase("force")) {
                     reloadCommand((Player) sender);
+                    Iterator<Map.Entry<Player, PlayerStats>> iterator = playerStats.entrySet().iterator();
+                    while (iterator.hasNext()) {
+                        Map.Entry<Player, PlayerStats> entry = iterator.next();
+                        Player player = entry.getKey();
+                        PlayerStats playerStatistic = entry.getValue();
+
+                        // Use playerStats to set the player's level and other stats
+                        int level = playerStatistic.getLevelTimer();
+                        float exp = playerStatistic.getExpTimer();
+                        player.setLevel(level);
+                        player.setExp(exp);
+
+                        // Remove the player's stats from the map
+                        iterator.remove();
+                    }
                     playerStats.clear();
                     if(ToastedAFK.instance.getConfig().getBoolean("bossbar.show")) {
                         bossBar.removeAll();
@@ -200,6 +218,7 @@ public class AFKCommand implements CommandExecutor {
         ValuesManager.loadConfigValues();
         CommandsManager.loadCommands();
         LoadingScreen.initializeLoadingScreen();
+        CoreHelpers.readConfiguration();
     }
     public void saveCommand(Player player) {
         configFile = new File(ToastedAFK.instance.getDataFolder(),"config.yml");

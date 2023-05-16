@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ValuesManager {
@@ -28,7 +29,7 @@ public class ValuesManager {
     public static BarColor barColor;
     public static BarStyle barStyle;
     public static void loadConfigValues() {
-        World world = Bukkit.getWorld(ToastedAFK.instance.getConfig().getString("region.locations.world"));
+        World world = Bukkit.getWorld(Objects.requireNonNull(ToastedAFK.instance.getConfig().getString("region.locations.world")));
         loc1 = new Location(world,
                 ToastedAFK.instance.getConfig().getDouble("region.locations.loc1.x"),
                 ToastedAFK.instance.getConfig().getDouble("region.locations.loc1.y"),
