@@ -1,6 +1,8 @@
 package me.serbob.toastedafk.Templates;
 
 import me.serbob.toastedafk.Classes.PlayerStats;
+import me.serbob.toastedafk.NMS.Usages.RefActionbar;
+import me.serbob.toastedafk.NMS.Usages.RefTitle;
 import me.serbob.toastedafk.ToastedAFK;
 import me.serbob.toastedafk.Utils.AFKUtil;
 import net.md_5.bungee.api.ChatMessageType;
@@ -16,6 +18,8 @@ import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static me.serbob.toastedafk.Managers.ValuesManager.*;
+import static me.serbob.toastedafk.Managers.VersionManager.isVersion1_12OrBelow;
+import static me.serbob.toastedafk.Managers.VersionManager.isVersion1_8;
 import static me.serbob.toastedafk.Templates.LoadingScreen.*;
 
 public class CoreHelpers {
@@ -35,8 +39,12 @@ public class CoreHelpers {
     }
     public static void updatePlayer(Player player) {
         if (actionBarShow) {
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(
-                    ActionBar.formatNormalActionBar(player)));
+            if(isVersion1_8()) {
+                RefActionbar.sendActionBarPacket(player,ActionBar.formatNormalActionBar(player));
+            } else {
+                player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
+                        TextComponent.fromLegacyText(ActionBar.formatNormalActionBar(player)));
+            }
         }
         if (bossBarShow) {
             if (bossBarText.equalsIgnoreCase("{timer}")) {
@@ -49,7 +57,9 @@ public class CoreHelpers {
             player.setLevel(playerStats.get(player).getAfkTimer());
         }
         if(titleScreenShow) {
-            player.sendTitle(getTitle(player),getSubtitle(player), 0, 40, 0);
+            if(isVersion1_12OrBelow())
+                RefTitle.sendReflTitle(player,getTitle(player),getSubtitle(player),0,40,0);
+            else player.sendTitle(getTitle(player),getSubtitle(player),0,40,0);
         }
     }
     public static void addPlayer(Player player) {

@@ -46,7 +46,7 @@ public final class ToastedAFK extends JavaPlugin {
         serverCrash();
     }
     public void enableMetrics() {
-        Metrics metrics = new Metrics(this,108107);
+        Metrics metrics = new Metrics(this,18463);
         metrics.addCustomChart(new Metrics.MultiLineChart("players_and_servers", new Callable<Map<String, Integer>>() {
             @Override
             public Map<String, Integer> call() throws Exception {
