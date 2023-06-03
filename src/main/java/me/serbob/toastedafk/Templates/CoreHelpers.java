@@ -23,19 +23,27 @@ import static me.serbob.toastedafk.Managers.VersionManager.isVersion1_8;
 import static me.serbob.toastedafk.Templates.LoadingScreen.*;
 
 public class CoreHelpers {
+    public static int schedulerTimer;
     public static boolean saveXpInsideRegion;
     public static boolean showXpBar;
     public static boolean bossBarShow;
     public static boolean actionBarShow;
     public static boolean titleScreenShow;
+    public static boolean useProbabilityFeature;
+    public static boolean useRandomFeature;
+    public static boolean useCommands;
     public static String bossBarText;
     public static void readConfiguration() {
+        schedulerTimer = ToastedAFK.instance.getConfig().getInt("how_often_all_players_and_region_checked");
         saveXpInsideRegion = ToastedAFK.instance.getConfig().getBoolean("save_xp_inside_region");
         showXpBar = ToastedAFK.instance.getConfig().getBoolean("show_xp_bar");
         bossBarShow = ToastedAFK.instance.getConfig().getBoolean("bossbar.show");
         actionBarShow = ToastedAFK.instance.getConfig().getBoolean("actionbar.show");
         bossBarText = ToastedAFK.instance.getConfig().getString("bossbar.text");
         titleScreenShow = ToastedAFK.instance.getConfig().getBoolean("title_screen.show");
+        useProbabilityFeature = ToastedAFK.instance.getConfig().getBoolean("use_probability_feature");
+        useRandomFeature = ToastedAFK.instance.getConfig().getBoolean("use_random_feature");
+        useCommands = ToastedAFK.instance.getConfig().getBoolean("use_commands");
     }
     public static void updatePlayer(Player player) {
         if (actionBarShow) {

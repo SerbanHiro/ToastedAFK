@@ -8,6 +8,8 @@ import me.serbob.toastedafk.Utils.AFKUtil;
 import me.serbob.toastedafk.Utils.Logger;
 import org.bukkit.permissions.Permission;
 
+import static me.serbob.toastedafk.Templates.CoreHelpers.schedulerTimer;
+
 public class AFKManager {
     public static void start() {
         ConsoleErrorManager.checkErrors();
@@ -26,7 +28,7 @@ public class AFKManager {
         ToastedAFK.instance.getServer().getScheduler().scheduleSyncRepeatingTask(ToastedAFK.instance, () -> {
             AFKCore.getInstance().addOrRemovePlayers();
             AFKCore.getInstance().regionCheck();
-        }, 0L, 20L);
+        }, 0L, 20L*schedulerTimer);
     }
     public static void registerPermissions() {
         for (String perm : ToastedAFK.instance.getConfig().getConfigurationSection("afk_times").getKeys(false)) {

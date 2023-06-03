@@ -7,6 +7,10 @@
 #    -> e.g.: /sgive {player} {test3} 2
 # DOCS END #
 check_for_update: true # if a new update on spigot is released, you'll get a message in console and ingame
+use_probability_feature: false # enables the probability feature from each region
+use_random_feature: false # the 50/50 feature
+use_commands: true # classic feature
+how_often_all_players_and_region_checked: 1 # by default is 1, if you want to increase performance you can up it, however, the timers will go N seconds later, instead of 1 second
 default_afk_time: 1200 # in seconds
 afk_times: # name of permissions here
   default: 1200 # in seconds

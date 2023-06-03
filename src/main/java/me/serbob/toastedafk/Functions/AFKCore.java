@@ -37,9 +37,9 @@ public class AFKCore {
         playerStats.forEach((player, playerStatistics) -> {
             int timeLeft = playerStatistics.getAfkTimer();
             if (timeLeft-- <= 0) {
-                CoreHelpers.executeCommands(player);
-                CoreHelpers.executeRandomCommands(player);
-                ItemDistribution.distributeCommands(player);
+                if(useProbabilityFeature) {ItemDistribution.distributeCommands(player);}
+                if(useCommands) {CoreHelpers.executeCommands(player);}
+                if(useRandomFeature){CoreHelpers.executeRandomCommands(player);}
                 playerStatistics.setAfkTimer(playerStatistics.getDefaultAfkTime());
             } else {
                 playerStatistics.setAfkTimer(timeLeft);

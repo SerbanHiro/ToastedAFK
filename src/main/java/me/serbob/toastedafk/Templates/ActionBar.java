@@ -30,8 +30,8 @@ public class ActionBar {
                 AFKUtil.c(ToastedAFK.instance.getConfig().getString("actionbar.messages.pl_second"));
         String beforeMsg = AFKUtil.c(ToastedAFK.instance.getConfig().getString("actionbar.messages.before_msg")
                 .replace("{player}",player.getName()));
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(
-                beforeMsg + strDays + strHours + strMinutes + strSeconds));
+        //player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(
+          //      beforeMsg + strDays + strHours + strMinutes + strSeconds));
         return beforeMsg + strDays + strHours + strMinutes + strSeconds;
         //try {
         //  player.stopAllSounds();
