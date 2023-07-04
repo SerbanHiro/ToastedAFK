@@ -22,6 +22,7 @@ public class ValuesManager {
     public static Map<Player, PlayerStats> playerStats = new HashMap<>();
     public static int TIMEOUT_SECONDS=1200; // 20 minutes in seconds
     public static int DEFAULT_AFK_TIME;
+    public static World globalWorld;
     public static Location loc1;
     public static Location loc2;
     public static Location tempLoc1;
@@ -34,12 +35,12 @@ public class ValuesManager {
     //public static SimpleMBR bounds;
     //public static int branchFactor;
     public static void loadConfigValues() {
-        World world = Bukkit.getWorld(Objects.requireNonNull(ToastedAFK.instance.getConfig().getString("region.locations.world")));
-        loc1 = new Location(world,
+        globalWorld = Bukkit.getWorld(Objects.requireNonNull(ToastedAFK.instance.getConfig().getString("region.locations.world")));
+        loc1 = new Location(globalWorld,
                 ToastedAFK.instance.getConfig().getDouble("region.locations.loc1.x"),
                 ToastedAFK.instance.getConfig().getDouble("region.locations.loc1.y"),
                 ToastedAFK.instance.getConfig().getDouble("region.locations.loc1.z"));
-        loc2 = new Location(world,
+        loc2 = new Location(globalWorld,
                 ToastedAFK.instance.getConfig().getDouble("region.locations.loc2.x"),
                 ToastedAFK.instance.getConfig().getDouble("region.locations.loc2.y"),
                 ToastedAFK.instance.getConfig().getDouble("region.locations.loc2.z"));
@@ -54,7 +55,7 @@ public class ValuesManager {
         //branchFactor = ToastedAFK.instance.getConfig().getInt("branchFactor");
         //bounds = playerBounds(loc1, loc2);
         //playerTree = new PRTree<>(new AFKCore.PlayerMBRConverter(),branchFactor);
-        //playerTree.load(Bukkit.getOnlinePlayers());
+        //playerTree.load(globalWorld.getPlayers());
         Logger.log(Logger.LogLevel.INFO, AFKUtil.c("&aValues loaded!"));
     }
     private static Set<Chunk> getChunksInRegion(Location loc1, Location loc2) {

@@ -19,14 +19,12 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static me.serbob.toastedafk.Managers.AFKManager.shouldReset;
 import static me.serbob.toastedafk.Managers.ValuesManager.*;
 
 public class OPEvents implements Listener {
     @EventHandler
     public void onJoin(final PlayerJoinEvent e) {
         Player p = e.getPlayer();
-        shouldReset = true;
         if (ToastedAFK.instance.getConfig().getBoolean("check_for_update")) {
             if (p.hasPermission("afk.update")) {
                 //PLEASE REPLACE THE RESOURCE ID WITH YOUR SPIGOT RESOURCE

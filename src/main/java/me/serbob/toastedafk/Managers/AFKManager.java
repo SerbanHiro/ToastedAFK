@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.permissions.Permission;
 import org.bukkit.scheduler.BukkitScheduler;
 
+import static me.serbob.toastedafk.Managers.ValuesManager.*;
 import static me.serbob.toastedafk.Templates.CoreHelpers.schedulerTimer;
 
 public class AFKManager {
@@ -41,16 +42,13 @@ public class AFKManager {
             });*/
         }, 0L, 20L * schedulerTimer);
     }
-    public static boolean shouldReset; // this is for PRTree, not using it yet
-    public static void verifyScheduler() {
+    /**public static void verifyScheduler() {
         BukkitScheduler scheduler = ToastedAFK.instance.getServer().getScheduler();
         scheduler.scheduleSyncRepeatingTask(ToastedAFK.instance, () -> {
-            if(shouldReset) {
-                //playerTree = new PRTree<>(new AFKCore.PlayerMBRConverter(),branchFactor);
-                //playerTree.load(Bukkit.getOnlinePlayers());
-            }
+            playerTree = new PRTree<>(new AFKCore.PlayerMBRConverter(),branchFactor);
+            playerTree.load(globalWorld.getPlayers());
         }, 0L, 20L * schedulerTimer);
-    }
+    }*/
     public static void registerPermissions() {
         for (String perm : ToastedAFK.instance.getConfig().getConfigurationSection("afk_times").getKeys(false)) {
             String permissionName = "afk.perm." + perm.toLowerCase();

@@ -13,7 +13,6 @@ import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.Permission;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -85,7 +84,10 @@ public class AFKCore {
             if (!playerStats.containsKey(player))
                 addPlayer(player);
             updatePlayer(player);
-            updatePlayerStats(player);
+            if(useRewardSync) {
+                updatePlayerStatsSynchronized(player);
+            }
+            else updatePlayerStats(player);
         }*/
         --globalSyncTime;
         for (Chunk chunk : ValuesManager.chunksInRegion) {
