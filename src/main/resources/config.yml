@@ -6,33 +6,44 @@
 #    -> (if you want to give custom items from the items(configuration section) you will need to put the name inside { }
 #    -> e.g.: /sgive {player} {test3} 2
 # DOCS END #
-check_for_update: true # if a new update on spigot is released, you'll get a message in console and ingame
-use_probability_feature: false # enables the probability feature from each region
-use_random_feature: false # the 50/50 feature
-use_commands: true # classic feature
-how_often_all_players_and_region_checked: 1 # by default is 1, if you want to increase performance you can up it, however, the timers will go N seconds later, instead of 1 second
-default_afk_time: 1200 # in seconds
-afk_times: # name of permissions here
-  default: 1200 # in seconds
+
+# Update Settings
+check_for_update: true  # If a new update on spigot is released, you'll get a message in console and ingame
+use_probability_feature: false  # Enables the probability feature from each region
+use_random_feature: false  # Enables the 50/50 feature
+use_commands: true  # Enables classic feature
+reward_synchronization: false  # Uses only default_afk_time
+how_often_all_players_and_region_checked: 1  # Controls how often all players and regions are checked (default: 1 second)
+default_afk_time: 1200  # Default AFK time in seconds
+
+# AFK Times based on permissions
+afk_times:
+  default: 1200  # Default AFK time in seconds
+
+# Region Configuration
 region:
   locations:
     world: world
-    loc1:
+    loc1:  # Location 1 coordinates
       x: x
       y: y
       z: z
-    loc2:
+    loc2:  # Location 2 coordinates
       x: x
       y: y
       z: z
 
 # MESSAGES AND SOME CONFIGURATIONS ABOUT REGION
 placeholder_not_in_afk_region: "Not in AFK Zone"
-show_xp_bar: true # when player is inside region it will show them (BETA)
-save_xp_inside_region: false
 silent_player_inventory_full: "&cYour inventory is full, therefore you will not receive anything!"
+player_entered_region: "&cYou &fentered &can afk region!"
+player_left_region: "&cYou just &fleft &cthe afk region!"
+show_xp_bar: true  # When player is inside the region, it will show the XP bar (BETA)
+save_xp_inside_region: false
+
 actionbar:
   show: false
+  show_timer: true
   messages:
     sg_day: " day, "
     pl_day: " days, "
@@ -44,46 +55,59 @@ actionbar:
     sg_second: " second."
     pl_second: " seconds."
     before_msg: "{player} >> time left >> "
-loading_screen: # to use this just put {loadingScreenBar} or {loadingScreenPercentage}
+
+loading_screen:  # To use this, put {loadingScreenBar} or {loadingScreenPercentage}
   totalTiles: 10
   symbol: "|"
   loading_color: "&7"
   loading_complete: "&a"
-bossbar: # The bossbar will automatically update if you use the command /afk bossbar ...
+
+bossbar:  # The bossbar will automatically update if you use the command /afk bossbar ...
   show: false
   color: "RED"
   style: "SOLID"
-  text: "Idk" # put {timer} if you'd like the exact same text from actionbar
+  text: "Idk"  # Put {timer} if you'd like the exact same text from actionbar
+
 title_screen:
   show: true
   title: "&7[{loadingScreenBar}&7]"
   subtitle: "&c{loadingScreenPercentage}%"
 
-commands: # silent commands: use sgive to give players items without showing anything in console
-          # btw, ONLY with sgive you will be able to give items with NBT tags if players are afk
-          # usage: /silentgive (or sgive) {player} (if it's consolesender then you can put the name from items inside {})
+commands:  # Silent commands: use sgive to give players items without showing anything in console
+  # BTW, ONLY with sgive you will be able to give items with NBT tags if players are AFK
+  # Usage: /silentgive (or sgive) {player} (if it's consolesender then you can put the name from items inside {})
   - "msg {player} you were afk!"
   - "eco give {player} 100"
-  - "silentgive {player} {test3}"
+  # - "silentgive {player} {test3}"
+
 random_commands:
-  times: 2 # how many times should the algorithm shuffle and give 1 command from the list
+  times: 2  # How many times should the algorithm shuffle and give 1 command from the list
   list:
-    - "msg {player} random 1"
-    - "msg {player} random 2"
-    - "msg {player} random 3"
+    test1:
+      - "msg {player} this is test1"
+      - "msg {player} random 1"
+    test2:
+      - "msg {player} this is test2"
+      - "msg {player} random 2"
+    test3:
+      - "msg {player} this is test3"
+      - "msg {player} random 3"
+
 probability_commands:
   first_prob:
     command: "msg {player} 50%"
     chance: 50.0
   second_prob:
     command: "msg {player} 35%"
-    chance : 35.0
+    chance: 35.0
   third_prob:
     command: "msg {player} 15%"
     chance: 15.0
+
 on_command_deny: "&cYou cannot use this command here"
 denied_commands:
   - "/shop"
+
 items:
   test3:
     ==: org.bukkit.inventory.ItemStack

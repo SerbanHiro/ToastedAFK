@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 public class AFKUtil {
     public static String c(String preColor) {
-        return format(ChatColor.translateAlternateColorCodes('&',preColor));
+        return ChatColor.translateAlternateColorCodes('&',format(preColor));
     }
     private static final Pattern HEX_PATTERN = Pattern.compile("&(#[A-Fa-f0-9]{6})");
     private static String format(String string) {

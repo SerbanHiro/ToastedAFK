@@ -7,6 +7,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
 
 import static me.serbob.toastedafk.Managers.ValuesManager.playerStats;
+import static me.serbob.toastedafk.Templates.CoreHelpers.actionBarShowTimer;
 
 public class ActionBar {
     public static String formatNormalActionBar(Player player) {
@@ -29,10 +30,12 @@ public class ActionBar {
                 AFKUtil.c(ToastedAFK.instance.getConfig().getString("actionbar.messages.sg_second")) : seconds +
                 AFKUtil.c(ToastedAFK.instance.getConfig().getString("actionbar.messages.pl_second"));
         String beforeMsg = AFKUtil.c(ToastedAFK.instance.getConfig().getString("actionbar.messages.before_msg")
-                .replace("{player}",player.getName()));
+                .replace("{player}",player.getName())
+                .replace("{loadingScreenBar}",LoadingScreen.getLoadingScreenBar(player))
+                .replace("{loadingScreenPercentage}",LoadingScreen.getLoadingScreenPercentage(player)));
         //player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(
           //      beforeMsg + strDays + strHours + strMinutes + strSeconds));
-        return beforeMsg + strDays + strHours + strMinutes + strSeconds;
+        return actionBarShowTimer ? beforeMsg + strDays + strHours + strMinutes + strSeconds : beforeMsg;
         //try {
         //  player.stopAllSounds();
         //} catch (Exception ignored){}

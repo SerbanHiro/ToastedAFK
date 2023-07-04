@@ -1,6 +1,8 @@
 package me.serbob.toastedafk.Templates;
 
 import me.serbob.toastedafk.ToastedAFK;
+import me.serbob.toastedafk.Utils.AFKUtil;
+import me.serbob.toastedafk.Utils.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -28,7 +30,10 @@ public class ItemDistribution {
         probabilities.replaceAll(aDouble -> aDouble / totalProbability * 100);
 
         String command = getRandomItem(commands, probabilities);
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(),command.replace("{player}",player.getName()));
+        try{Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("{player}", player.getName()));}
+        catch (Exception ignored){
+            Logger.log(Logger.LogLevel.ERROR, AFKUtil.c("&cThe command \"&f"+command+"&c\" doesn't work!"));
+        }
     }
     // Helper method to retrieve a random item based on probabilities
     private static String getRandomItem(List<String> commands, List<Double> probabilities) {

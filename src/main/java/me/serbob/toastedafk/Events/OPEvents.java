@@ -1,9 +1,11 @@
 package me.serbob.toastedafk.Events;
 
+import me.serbob.toastedafk.Functions.AFKCore;
 import me.serbob.toastedafk.ToastedAFK;
 import me.serbob.toastedafk.Utils.AFKUtil;
 import me.serbob.toastedafk.Utils.Settings;
 import me.serbob.toastedafk.Utils.UpdateChecker;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -13,15 +15,18 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static me.serbob.toastedafk.Managers.AFKManager.shouldReset;
 import static me.serbob.toastedafk.Managers.ValuesManager.*;
 
 public class OPEvents implements Listener {
     @EventHandler
     public void onJoin(final PlayerJoinEvent e) {
         Player p = e.getPlayer();
+        shouldReset = true;
         if (ToastedAFK.instance.getConfig().getBoolean("check_for_update")) {
             if (p.hasPermission("afk.update")) {
                 //PLEASE REPLACE THE RESOURCE ID WITH YOUR SPIGOT RESOURCE

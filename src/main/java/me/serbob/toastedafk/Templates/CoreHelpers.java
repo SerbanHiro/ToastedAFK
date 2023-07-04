@@ -1,22 +1,25 @@
 package me.serbob.toastedafk.Templates;
 
 import me.serbob.toastedafk.Classes.PlayerStats;
+import me.serbob.toastedafk.Functions.AFKCore;
+import me.serbob.toastedafk.Managers.AFKManager;
 import me.serbob.toastedafk.NMS.Usages.RefActionbar;
 import me.serbob.toastedafk.NMS.Usages.RefTitle;
 import me.serbob.toastedafk.ToastedAFK;
 import me.serbob.toastedafk.Utils.AFKUtil;
+import me.serbob.toastedafk.Utils.Logger;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
+import static me.serbob.toastedafk.Commands.ALLVersionsCommandExecuter.*;
+import static me.serbob.toastedafk.Functions.AFKCore.globalSyncTime;
 import static me.serbob.toastedafk.Managers.ValuesManager.*;
 import static me.serbob.toastedafk.Managers.VersionManager.isVersion1_12OrBelow;
 import static me.serbob.toastedafk.Managers.VersionManager.isVersion1_8;
@@ -28,31 +31,34 @@ public class CoreHelpers {
     public static boolean showXpBar;
     public static boolean bossBarShow;
     public static boolean actionBarShow;
+    public static boolean actionBarShowTimer;
     public static boolean titleScreenShow;
     public static boolean useProbabilityFeature;
     public static boolean useRandomFeature;
     public static boolean useCommands;
+    public static String playerEntered;
+    public static String playerLeft;
     public static String bossBarText;
+    public static boolean useRewardSync;
     public static void readConfiguration() {
         schedulerTimer = ToastedAFK.instance.getConfig().getInt("how_often_all_players_and_region_checked");
         saveXpInsideRegion = ToastedAFK.instance.getConfig().getBoolean("save_xp_inside_region");
         showXpBar = ToastedAFK.instance.getConfig().getBoolean("show_xp_bar");
         bossBarShow = ToastedAFK.instance.getConfig().getBoolean("bossbar.show");
         actionBarShow = ToastedAFK.instance.getConfig().getBoolean("actionbar.show");
+        actionBarShowTimer = ToastedAFK.instance.getConfig().getBoolean("actionbar.show_timer");
         bossBarText = ToastedAFK.instance.getConfig().getString("bossbar.text");
         titleScreenShow = ToastedAFK.instance.getConfig().getBoolean("title_screen.show");
         useProbabilityFeature = ToastedAFK.instance.getConfig().getBoolean("use_probability_feature");
         useRandomFeature = ToastedAFK.instance.getConfig().getBoolean("use_random_feature");
         useCommands = ToastedAFK.instance.getConfig().getBoolean("use_commands");
+        playerEntered = ToastedAFK.instance.getConfig().getString("player_entered_region");
+        playerLeft = ToastedAFK.instance.getConfig().getString("player_left_region");
+        useRewardSync = ToastedAFK.instance.getConfig().getBoolean("reward_synchronization");
     }
     public static void updatePlayer(Player player) {
         if (actionBarShow) {
-            if(isVersion1_8()) {
-                RefActionbar.sendActionBarPacket(player,ActionBar.formatNormalActionBar(player));
-            } else {
-                player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
-                        TextComponent.fromLegacyText(ActionBar.formatNormalActionBar(player)));
-            }
+            sendALLVersionsActionBar(player);
         }
         if (bossBarShow) {
             if (bossBarText.equalsIgnoreCase("{timer}")) {
@@ -65,12 +71,11 @@ public class CoreHelpers {
             player.setLevel(playerStats.get(player).getAfkTimer());
         }
         if(titleScreenShow) {
-            if(isVersion1_12OrBelow())
-                RefTitle.sendReflTitle(player,getTitle(player),getSubtitle(player),0,40,0);
-            else player.sendTitle(getTitle(player),getSubtitle(player),0,40,0);
+            sendALLVersionsTitleScreen(player);
         }
     }
     public static void addPlayer(Player player) {
+        sendCUSTOMAllVersionsTitleScreen(player,playerEntered);
         int defaultAfkTime = getDefaultAfkTime(player);
         boolean playerXpEnabled = saveXpInsideRegion || showXpBar;
         playerStats.putIfAbsent(player, new PlayerStats(defaultAfkTime, defaultAfkTime, player.getLevel(),
@@ -82,8 +87,12 @@ public class CoreHelpers {
         if (bossBarShow) {
             bossBar.addPlayer(player);
         }
+        if(useRewardSync)
+            playerStats.get(player).setAfkTimer(globalSyncTime);
     }
     public static void removePlayer(Player player) {
+        //AFKCore.getInstance().removePlayerFromCache(player); <-- Used for caching, not using it yet
+        sendCUSTOMAllVersionsTitleScreen(player,playerLeft);
         if (saveXpInsideRegion || showXpBar) {
             player.setLevel(playerStats.get(player).getLevelTimer());
             player.setExp(playerStats.get(player).getExpTimer());
@@ -109,17 +118,29 @@ public class CoreHelpers {
     }
     public static void executeCommands(Player player) {
         List<String> commands = ToastedAFK.instance.getConfig().getStringList("commands");
-        commands.forEach(command -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("{player}", player.getName())));
+        for(String command:commands) {
+            try{Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("{player}", player.getName()));}
+            catch (Exception ignored){
+                Logger.log(Logger.LogLevel.ERROR,AFKUtil.c("&cThe command \"&f"+command+"&c\" doesn't work!"));
+            }
+        }
     }
     public static void executeRandomCommands(Player player) {
-        List<String> commands = ToastedAFK.instance.getConfig().getStringList("random_commands.list");
+        List<String> commands = new ArrayList<>(ToastedAFK.instance.getConfig().getConfigurationSection("random_commands.list").getKeys(false));
         int timesToExecute = ToastedAFK.instance.getConfig().getInt("random_commands.times");
         for (int i = 0; i < timesToExecute; i++) {
             Collections.shuffle(commands);
             if (!commands.isEmpty()) {
                 int randomIndex = ThreadLocalRandom.current().nextInt(commands.size());
-                String command = commands.get(randomIndex).replace("{player}", player.getName());
-                ToastedAFK.instance.getServer().dispatchCommand(ToastedAFK.instance.getServer().getConsoleSender(), command);
+                String listToBeExec = commands.get(randomIndex);
+                for(String command:ToastedAFK.instance.getConfig().getStringList("random_commands.list."+listToBeExec)) {
+                    command = command.replace("{player}", player.getName());
+                    try {
+                        ToastedAFK.instance.getServer().dispatchCommand(ToastedAFK.instance.getServer().getConsoleSender(), command);
+                    } catch (Exception ignored) {
+                        Logger.log(Logger.LogLevel.ERROR, AFKUtil.c("&cThe command \"&f" + command + "&c\" doesn't work!"));
+                    }
+                }
             }
         }
     }

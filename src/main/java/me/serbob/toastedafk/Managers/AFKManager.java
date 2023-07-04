@@ -6,7 +6,9 @@ import me.serbob.toastedafk.Templates.LoadingScreen;
 import me.serbob.toastedafk.ToastedAFK;
 import me.serbob.toastedafk.Utils.AFKUtil;
 import me.serbob.toastedafk.Utils.Logger;
+import org.bukkit.Bukkit;
 import org.bukkit.permissions.Permission;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import static me.serbob.toastedafk.Templates.CoreHelpers.schedulerTimer;
 
@@ -22,13 +24,32 @@ public class AFKManager {
         LoadingScreen.initializeLoadingScreen();
 
         startScheduler();
+        //verifyScheduler();
         Logger.log(Logger.LogLevel.INFO, AFKUtil.c("Scheduler started!"));
     }
     public static void startScheduler() {
-        ToastedAFK.instance.getServer().getScheduler().scheduleSyncRepeatingTask(ToastedAFK.instance, () -> {
-            AFKCore.getInstance().addOrRemovePlayers();
-            AFKCore.getInstance().regionCheck();
-        }, 0L, 20L*schedulerTimer);
+        BukkitScheduler scheduler = ToastedAFK.instance.getServer().getScheduler();
+        scheduler.scheduleSyncRepeatingTask(ToastedAFK.instance, () -> {
+            //Bukkit.getScheduler().runTaskAsynchronously(ToastedAFK.instance, () -> {
+                // Execute addOrRemovePlayers() in a separate thread
+                AFKCore.getInstance().addOrRemovePlayers();
+            //});
+
+            /**Bukkit.getScheduler().runTaskAsynchronously(ToastedAFK.instance, () -> {
+                // Execute regionCheck() in a separate thread
+                AFKCore.getInstance().regionCheck();
+            });*/
+        }, 0L, 20L * schedulerTimer);
+    }
+    public static boolean shouldReset; // this is for PRTree, not using it yet
+    public static void verifyScheduler() {
+        BukkitScheduler scheduler = ToastedAFK.instance.getServer().getScheduler();
+        scheduler.scheduleSyncRepeatingTask(ToastedAFK.instance, () -> {
+            if(shouldReset) {
+                //playerTree = new PRTree<>(new AFKCore.PlayerMBRConverter(),branchFactor);
+                //playerTree.load(Bukkit.getOnlinePlayers());
+            }
+        }, 0L, 20L * schedulerTimer);
     }
     public static void registerPermissions() {
         for (String perm : ToastedAFK.instance.getConfig().getConfigurationSection("afk_times").getKeys(false)) {
