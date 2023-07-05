@@ -37,19 +37,15 @@ public class AFKCore {
 
         int timeLeft = playerStatistics.getAfkTimer();
         if (timeLeft <= 0) {
-            if (isPlayerInRegion(player,loc1,loc2)) {
-                playerStatistics.setAfkTimer(playerStatistics.getDefaultAfkTime());
-                if (useProbabilityFeature) {
-                    ItemDistribution.distributeCommands(player);
-                }
-                if (useCommands) {
-                    CoreHelpers.executeCommands(player);
-                }
-                if (useRandomFeature) {
-                    CoreHelpers.executeRandomCommands(player);
-                }
-            } else {
-                removePlayer(player);
+            playerStatistics.setAfkTimer(playerStatistics.getDefaultAfkTime());
+            if (useProbabilityFeature) {
+                ItemDistribution.distributeCommands(player);
+            }
+            if (useCommands) {
+                CoreHelpers.executeCommands(player);
+            }
+            if (useRandomFeature) {
+                CoreHelpers.executeRandomCommands(player);
             }
         } else {
             timeLeft-=schedulerTimer;
@@ -59,121 +55,32 @@ public class AFKCore {
     public void updatePlayerStatsSynchronized(Player player) {
         PlayerStats playerStatistics = playerStats.get(player);
         if(playerStatistics.getAfkTimer()==0) {
-            if (isPlayerInRegion(player,loc1,loc2)) {
-                playerStatistics.setAfkTimer(playerStatistics.getDefaultAfkTime());
-                if (useProbabilityFeature) {
-                    ItemDistribution.distributeCommands(player);
-                }
-                if (useCommands) {
-                    CoreHelpers.executeCommands(player);
-                }
-                if (useRandomFeature) {
-                    CoreHelpers.executeRandomCommands(player);
-                }
-            } else {
-                removePlayer(player);
+            playerStatistics.setAfkTimer(playerStatistics.getDefaultAfkTime());
+            if (useProbabilityFeature) {
+                ItemDistribution.distributeCommands(player);
+            }
+            if (useCommands) {
+                CoreHelpers.executeCommands(player);
+            }
+            if (useRandomFeature) {
+                CoreHelpers.executeRandomCommands(player);
             }
         }
         playerStatistics.setAfkTimer(globalSyncTime);
     }
-    //private Spliterator<Player> spliterator = null;
 
     public void addOrRemovePlayers() {
-        /**Iterable<Player> players = playerTree.find(bounds);
-        for (Player player : players) {
-            if (!playerStats.containsKey(player))
-                addPlayer(player);
-            updatePlayer(player);
-            if(useRewardSync) {
-                updatePlayerStatsSynchronized(player);
-            }
-            else updatePlayerStats(player);
-        }*/
         --globalSyncTime;
-        for (Chunk chunk : ValuesManager.chunksInRegion) {
-            for (Entity entity : chunk.getEntities()) {
-                if (entity instanceof Player) {
-                    Player player = (Player)entity;
-                    if (RegionUtils.playerInCubiod(player.getLocation(), loc1, loc2)) {
-                        if (!ValuesManager.playerStats.containsKey(player)) {
-                            CoreHelpers.addPlayer(player);
-                        } else {
-                            updatePlayer(player);
-                            if(useRewardSync) {
-                                updatePlayerStatsSynchronized(player);
-                            }
-                            else updatePlayerStats(player);
-                        }
-                    } else if (ValuesManager.playerStats.containsKey(player)) {
-                        removePlayer(player);
-                    }
-                }
+        playerStats.entrySet().parallelStream().forEach(entry -> {
+            Player player = entry.getKey();
+            updatePlayer(player);
+            if (useRewardSync) {
+                updatePlayerStatsSynchronized(player);
+            } else {
+                updatePlayerStats(player);
             }
-        }
+        });
         if(globalSyncTime==0)
             globalSyncTime=DEFAULT_AFK_TIME+1;
     }
-
-    // Still experimental caching algorithm, not using it yet for public
-    public static Map<Player, Boolean> playerRegionCache = new HashMap<>();
-    private boolean isPlayerInRegion(Player player, Location loc1, Location loc2) {
-        Boolean cachedResult = playerRegionCache.get(player);
-        if (cachedResult != null) {
-            return true;
-        }
-
-        boolean result = RegionUtils.playerInCubiod(player.getLocation(), loc1, loc2);
-        if(result)
-            playerRegionCache.put(player, true);
-        return result;
-    }
-    public void removePlayerFromCache(Player player) {
-        playerRegionCache.remove(player);
-    }
-    /**public void addOrRemovePlayers() {
-     for (Player player : Bukkit.getOnlinePlayers()) {
-     if (RegionUtils.playerInCubiod(player.getLocation(), loc1, loc2)) {
-     if(!playerStats.containsKey(player)) addPlayer(player);
-     updatePlayer(player);
-     } else {
-     if(playerStats.containsKey(player)) removePlayer(player);
-     }
-     }
-     }*/
-    /**public static class PlayerMBRConverter implements MBRConverter<Player> {
-        @Override
-        public int getDimensions() {
-            return 3; // Assuming x, y, z coordinates
-        }
-
-        @Override
-        public double getMin(int axis, Player player) {
-            Location location = player.getLocation();
-            switch (axis) {
-                case 0:
-                    return location.getX();
-                case 1:
-                    return location.getY();
-                case 2:
-                    return location.getZ();
-                default:
-                    throw new IllegalArgumentException("Invalid axis: " + axis);
-            }
-        }
-
-        @Override
-        public double getMax(int axis, Player player) {
-            Location location = player.getLocation();
-            switch (axis) {
-                case 0:
-                    return location.getX();
-                case 1:
-                    return location.getY();
-                case 2:
-                    return location.getZ();
-                default:
-                    throw new IllegalArgumentException("Invalid axis: " + axis);
-            }
-        }
-    }*/
 }
