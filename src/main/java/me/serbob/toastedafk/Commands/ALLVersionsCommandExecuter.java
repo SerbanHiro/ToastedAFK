@@ -28,6 +28,8 @@ public class ALLVersionsCommandExecuter {
         else player.sendTitle(getTitle(player),getSubtitle(player),0,40,0);
     }
     public static void sendCUSTOMAllVersionsTitleScreen(Player player, String message) {
-        player.sendTitle(AFKUtil.c(message),"",10,20,10);
+        if(isVersion1_12OrBelow())
+            RefTitle.sendReflTitle(player,AFKUtil.c(message),"",10,20,10);
+        else player.sendTitle(AFKUtil.c(message),"",10,20,10);
     }
 }
