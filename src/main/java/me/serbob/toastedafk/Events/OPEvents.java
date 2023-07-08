@@ -1,23 +1,14 @@
 package me.serbob.toastedafk.Events;
 
-import me.serbob.toastedafk.Functions.AFKCore;
 import me.serbob.toastedafk.ToastedAFK;
 import me.serbob.toastedafk.Utils.AFKUtil;
 import me.serbob.toastedafk.Utils.Settings;
 import me.serbob.toastedafk.Utils.UpdateChecker;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
-
-import java.util.Collections;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static me.serbob.toastedafk.Managers.ValuesManager.*;
 
@@ -41,19 +32,6 @@ public class OPEvents implements Listener {
                         p.sendMessage(AFKUtil.c("&8&l&m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯"));                    }
                 });
             }
-        }
-    }
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        if(!playerStats.containsKey(player)) return;
-        if(ToastedAFK.instance.getConfig().getBoolean("show_xp_bar")) {
-            player.setLevel(playerStats.get(player).getLevelTimer());
-            player.setExp(playerStats.get(player).getExpTimer());
-        }
-        playerStats.remove(player);
-        if(ToastedAFK.instance.getConfig().getBoolean("bossbar.show")) {
-            bossBar.removePlayer(player);
         }
     }
     @EventHandler
