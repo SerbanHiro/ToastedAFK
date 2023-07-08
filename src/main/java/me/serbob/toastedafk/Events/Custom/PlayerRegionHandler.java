@@ -1,7 +1,5 @@
 package me.serbob.toastedafk.Events.Custom;
 
-import me.serbob.toastedafk.Events.Custom.OnRegionEnteredEvent;
-import me.serbob.toastedafk.Events.Custom.OnRegionLeftEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

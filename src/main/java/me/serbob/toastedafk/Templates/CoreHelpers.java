@@ -73,6 +73,11 @@ public class CoreHelpers {
         if(titleScreenShow) {
             sendALLVersionsTitleScreen(player);
         }
+        if (useRewardSync) {
+            updatePlayerStatsSynchronized(player);
+        } else {
+            updatePlayerStats(player);
+        }
     }
     public static void addPlayer(Player player) {
         sendCUSTOMAllVersionsTitleScreen(player,playerEntered);
@@ -80,7 +85,6 @@ public class CoreHelpers {
         boolean playerXpEnabled = saveXpInsideRegion || showXpBar;
         playerStats.putIfAbsent(player, new PlayerStats(defaultAfkTime, defaultAfkTime, player.getLevel(),
                 player.getExp(), playerXpEnabled));
-
         if (showXpBar) {
             player.setExp(1.0f);
         }
@@ -163,5 +167,41 @@ public class CoreHelpers {
         if(bossBarShow) {
             bossBar.removeAll();
         }
+    }
+    public static void updatePlayerStats(Player player) {
+        PlayerStats playerStatistics = playerStats.get(player);
+
+        int timeLeft = playerStatistics.getAfkTimer();
+        if (timeLeft <= 0) {
+            playerStatistics.setAfkTimer(playerStatistics.getDefaultAfkTime());
+            if (useProbabilityFeature) {
+                ItemDistribution.distributeCommands(player);
+            }
+            if (useCommands) {
+                CoreHelpers.executeCommands(player);
+            }
+            if (useRandomFeature) {
+                CoreHelpers.executeRandomCommands(player);
+            }
+        } else {
+            timeLeft-=schedulerTimer;
+            playerStatistics.setAfkTimer(timeLeft);
+        }
+    }
+    public static void updatePlayerStatsSynchronized(Player player) {
+        PlayerStats playerStatistics = playerStats.get(player);
+        if(playerStatistics.getAfkTimer()==0) {
+            playerStatistics.setAfkTimer(playerStatistics.getDefaultAfkTime());
+            if (useProbabilityFeature) {
+                ItemDistribution.distributeCommands(player);
+            }
+            if (useCommands) {
+                CoreHelpers.executeCommands(player);
+            }
+            if (useRandomFeature) {
+                CoreHelpers.executeRandomCommands(player);
+            }
+        }
+        playerStatistics.setAfkTimer(globalSyncTime);
     }
 }
