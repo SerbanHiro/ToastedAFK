@@ -78,7 +78,8 @@ public class RegionRelatedEventsHandler implements Listener {
         updateRegions(event.getPlayer(), CurrentMove.SPAWN,event.getRespawnLocation(),event);
     }
     private boolean updateRegions(Player player, CurrentMove movementWay, Location to, PlayerEvent event) {
-        if(!RegionUtils.playerInCubiod(to,loc1,loc2)) {
+        if(!RegionUtils.playerInCubiod(to,loc1,loc2)
+        /**!RegionUtils.getPlayersInRegion(to,ToastedAFK.instance.getConfig().getString("wg_region"),ToastedAFK.instance)*/) {
             if(playerStats.containsKey(player)) {
                 OnRegionLeftEvent regionLeftEvent = new OnRegionLeftEvent(player,movementWay,event);
                 ToastedAFK.instance.getServer().getPluginManager().callEvent(regionLeftEvent);
