@@ -24,6 +24,10 @@ public class RegionRelatedEventsHandler implements Listener {
         if(RegionUtils.playerInCubiod(event.getPlayer().getLocation(),loc1,loc2)) {
             OnRegionLeftEvent leaveEvent = new OnRegionLeftEvent(event.getPlayer(), CurrentMove.DISCONNECT, event);
             ToastedAFK.instance.getServer().getPluginManager().callEvent(leaveEvent);
+        } else {
+            if(playerStats.containsKey(event.getPlayer())) {
+                playerStats.remove(event.getPlayer());
+            }
         }
     }
     @EventHandler
@@ -31,6 +35,10 @@ public class RegionRelatedEventsHandler implements Listener {
         if(RegionUtils.playerInCubiod(event.getPlayer().getLocation(),loc1,loc2)) {
             OnRegionLeftEvent leaveEvent = new OnRegionLeftEvent(event.getPlayer(), CurrentMove.DISCONNECT, event);
             ToastedAFK.instance.getServer().getPluginManager().callEvent(leaveEvent);
+        } else {
+            if(playerStats.containsKey(event.getPlayer())) {
+                playerStats.remove(event.getPlayer());
+            }
         }
     }
     /**@EventHandler <-- might use this but for the moment using concurrenthashmaps seems to be more efficient

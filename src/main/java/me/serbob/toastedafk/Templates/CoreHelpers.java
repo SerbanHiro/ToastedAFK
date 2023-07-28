@@ -123,7 +123,8 @@ public class CoreHelpers {
     public static void executeCommands(Player player) {
         List<String> commands = ToastedAFK.instance.getConfig().getStringList("commands");
         for(String command:commands) {
-            try{Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("{player}", player.getName()));}
+            command = command.replace("{player}",player.getName());
+            try{Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);}
             catch (Exception ignored){
                 Logger.log(Logger.LogLevel.ERROR,AFKUtil.c("&cThe command \"&f"+command+"&c\" doesn't work!"));
             }
