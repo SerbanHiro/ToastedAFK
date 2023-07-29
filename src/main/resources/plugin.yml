@@ -23,5 +23,11 @@ permissions:
     default: op
   afk.item:
     default: op
+  afk.bossbar:
+    default: op
+  afk.check:
+    default: op
+  afk.list:
+    default: op
   silentgive.use:
     default: op

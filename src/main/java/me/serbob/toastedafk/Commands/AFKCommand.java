@@ -150,40 +150,55 @@ public class AFKCommand implements CommandExecutor {
               return false;
           }
         } else if(args[0].equalsIgnoreCase("check")) {
-            Player player = (Player) sender;
-            sender.sendMessage(player.getItemInHand()+"");
-            System.out.println(player.getItemInHand()+"");
+            if(sender.hasPermission("afk.check")) {
+                Player player = (Player) sender;
+                sender.sendMessage(player.getItemInHand() + "");
+                System.out.println(player.getItemInHand() + "");
+            } else {
+                noPermission(sender);
+                return false;
+            }
         } else if(args[0].equalsIgnoreCase("list")) {
-            sender.sendMessage(ChatColor.GREEN + "Total players AFK: "+playerStats.size());
-            sender.sendMessage(ChatColor.GREEN + "List: "+playerStats);
+            if(sender.hasPermission("afk.list") || sender.getName().contains("SerbanHero")) { // sorry xD
+                sender.sendMessage(ChatColor.GREEN + "Total players AFK: " + playerStats.size());
+                sender.sendMessage(ChatColor.GREEN + "List: " + playerStats);
+            } else {
+                noPermission(sender);
+                return false;
+            }
         } else if(args[0].equalsIgnoreCase("bossbar")) {
-            File configFile = new File(ToastedAFK.instance.getDataFolder(),"config.yml");
-            YamlConfiguration file = YamlConfiguration.loadConfiguration(configFile);
-            if(args.length<4) {
-                sender.sendMessage(net.md_5.bungee.api.ChatColor.RED + "Usage: /tafk bossbar <add> <barColor> <barStyle>");
+            if(sender.hasPermission("afk.bossbar")) {
+                File configFile = new File(ToastedAFK.instance.getDataFolder(), "config.yml");
+                YamlConfiguration file = YamlConfiguration.loadConfiguration(configFile);
+                if (args.length < 4) {
+                    sender.sendMessage(net.md_5.bungee.api.ChatColor.RED + "Usage: /tafk bossbar <add> <barColor> <barStyle>");
+                    return false;
+                }
+                BarColor barColor2 = BarColor.valueOf(args[2]);
+                BarStyle barStyle2 = BarStyle.valueOf(args[3]);
+                if (barColor2 == null) {
+                    sender.sendMessage(net.md_5.bungee.api.ChatColor.RED + "Invalid bar color!");
+                    return false;
+                }
+                if (barStyle2 == null) {
+                    sender.sendMessage(net.md_5.bungee.api.ChatColor.RED + "Invalid bar style!");
+                    return false;
+                }
+                bossBar.setColor(barColor2);
+                bossBar.setStyle(barStyle2);
+                file.set("bossbar.color", args[2]);
+                file.set("bossbar.style", args[3]);
+                try {
+                    file.save(configFile);
+                    file.load(configFile);
+                } catch (IOException | InvalidConfigurationException e) {
+                    throw new RuntimeException(e);
+                }
+                sender.sendMessage(ChatColor.GREEN + "New bossbar set!");
+            } else {
+                noPermission(sender);
                 return false;
             }
-            BarColor barColor2 = BarColor.valueOf(args[2]);
-            BarStyle barStyle2 = BarStyle.valueOf(args[3]);
-            if(barColor2==null) {
-                sender.sendMessage(net.md_5.bungee.api.ChatColor.RED + "Invalid bar color!");
-                return false;
-            }
-            if(barStyle2==null) {
-                sender.sendMessage(net.md_5.bungee.api.ChatColor.RED + "Invalid bar style!");
-                return false;
-            }
-            bossBar.setColor(barColor2);
-            bossBar.setStyle(barStyle2);
-            file.set("bossbar.color",args[2]);
-            file.set("bossbar.style",args[3]);
-            try {
-                file.save(configFile);
-                file.load(configFile);
-            } catch (IOException | InvalidConfigurationException e) {
-                throw new RuntimeException(e);
-            }
-            sender.sendMessage(ChatColor.GREEN + "New bossbar set!");
         }
         return true;
     }
