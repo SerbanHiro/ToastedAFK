@@ -21,7 +21,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static me.serbob.toastedafk.Commands.ALLVersionsCommandExecuter.sendCUSTOMAllVersionsTitleScreen;
 import static me.serbob.toastedafk.Managers.ValuesManager.*;
 import static me.serbob.toastedafk.Templates.CoreHelpers.*;
 public class AFKCore {
@@ -71,7 +70,7 @@ public class AFKCore {
 
     public void addOrRemovePlayers() {
         --globalSyncTime;
-        playerStats.entrySet().parallelStream().forEach(entry -> {
+        playerStats.entrySet().forEach(entry -> {
             Player player = entry.getKey();
             updatePlayer(player);
             if (useRewardSync) {
