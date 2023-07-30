@@ -21,7 +21,9 @@ import static me.serbob.toastedafk.Managers.ValuesManager.*;
 public class RegionRelatedEventsHandler implements Listener {
     @EventHandler
     public void onPlayerKick(PlayerKickEvent event) {
-        if(RegionUtils.playerInCubiod(event.getPlayer().getLocation(),loc1,loc2)) {
+        if(RegionUtils.playerInCubiod(event.getPlayer().getLocation(),loc1,loc2)
+                /**RegionUtils.getPlayersInRegion(event.getPlayer().getLocation(),
+                        ToastedAFK.instance.getConfig().getString("wg_region"),ToastedAFK.instance)*/) {
             OnRegionLeftEvent leaveEvent = new OnRegionLeftEvent(event.getPlayer(), CurrentMove.DISCONNECT, event);
             ToastedAFK.instance.getServer().getPluginManager().callEvent(leaveEvent);
         } else {
@@ -32,7 +34,9 @@ public class RegionRelatedEventsHandler implements Listener {
     }
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        if(RegionUtils.playerInCubiod(event.getPlayer().getLocation(),loc1,loc2)) {
+        if(RegionUtils.playerInCubiod(event.getPlayer().getLocation(),loc1,loc2)
+                /**RegionUtils.getPlayersInRegion(event.getPlayer().getLocation(),
+                        ToastedAFK.instance.getConfig().getString("wg_region"),ToastedAFK.instance)*/) {
             OnRegionLeftEvent leaveEvent = new OnRegionLeftEvent(event.getPlayer(), CurrentMove.DISCONNECT, event);
             ToastedAFK.instance.getServer().getPluginManager().callEvent(leaveEvent);
         } else {
