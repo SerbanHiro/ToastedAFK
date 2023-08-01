@@ -31,53 +31,11 @@ public class AFKCore {
             instance = new AFKCore();
         return instance;
     }
-    public void updatePlayerStats(Player player) {
-        PlayerStats playerStatistics = playerStats.get(player);
-
-        int timeLeft = playerStatistics.getAfkTimer();
-        if (timeLeft <= 0) {
-            playerStatistics.setAfkTimer(playerStatistics.getDefaultAfkTime());
-            if (useProbabilityFeature) {
-                ItemDistribution.distributeCommands(player);
-            }
-            if (useCommands) {
-                CoreHelpers.executeCommands(player);
-            }
-            if (useRandomFeature) {
-                CoreHelpers.executeRandomCommands(player);
-            }
-        } else {
-            timeLeft-=schedulerTimer;
-            playerStatistics.setAfkTimer(timeLeft);
-        }
-    }
-    public void updatePlayerStatsSynchronized(Player player) {
-        PlayerStats playerStatistics = playerStats.get(player);
-        if(playerStatistics.getAfkTimer()==0) {
-            playerStatistics.setAfkTimer(playerStatistics.getDefaultAfkTime());
-            if (useProbabilityFeature) {
-                ItemDistribution.distributeCommands(player);
-            }
-            if (useCommands) {
-                CoreHelpers.executeCommands(player);
-            }
-            if (useRandomFeature) {
-                CoreHelpers.executeRandomCommands(player);
-            }
-        }
-        playerStatistics.setAfkTimer(globalSyncTime);
-    }
-
     public void addOrRemovePlayers() {
         --globalSyncTime;
         playerStats.entrySet().forEach(entry -> {
             Player player = entry.getKey();
             updatePlayer(player);
-            if (useRewardSync) {
-                updatePlayerStatsSynchronized(player);
-            } else {
-                updatePlayerStats(player);
-            }
         });
         if(globalSyncTime==0)
             globalSyncTime=DEFAULT_AFK_TIME+1;

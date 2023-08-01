@@ -8,7 +8,7 @@
 # DOCS END #
 
 # Update Settings
-wg_region: afk
+# wg_region: afk
 check_for_update: true  # If a new update on spigot is released, you'll get a message in console and ingame
 use_probability_feature: false  # Enables the probability feature from each region
 use_random_feature: false  # Enables the 50/50 feature
