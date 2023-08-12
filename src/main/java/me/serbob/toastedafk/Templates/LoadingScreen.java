@@ -36,13 +36,15 @@ public class LoadingScreen {
     public static String getTitle(Player player) {
         String title = AFKUtil.c(ToastedAFK.instance.getConfig().getString("title_screen.title"))
                 .replace("{loadingScreenBar}",LoadingScreen.getLoadingScreenBar(player))
-                .replace("{loadingScreenPercentage}",LoadingScreen.getLoadingScreenPercentage(player));
+                .replace("{loadingScreenPercentage}",LoadingScreen.getLoadingScreenPercentage(player))
+                .replace("{timer}",ActionBar.formatNormalActionBar(player));
         return title;
     }
     public static String getSubtitle(Player player) {
         String percentage = AFKUtil.c(ToastedAFK.instance.getConfig().getString("title_screen.subtitle"))
                 .replace("{loadingScreenBar}",LoadingScreen.getLoadingScreenBar(player))
-                .replace("{loadingScreenPercentage}",LoadingScreen.getLoadingScreenPercentage(player));
+                .replace("{loadingScreenPercentage}",LoadingScreen.getLoadingScreenPercentage(player))
+                .replace("{timer}",ActionBar.formatNormalActionBar(player));
         return percentage;
     }
 }
