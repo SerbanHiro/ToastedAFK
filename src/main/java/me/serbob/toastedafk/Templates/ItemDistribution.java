@@ -18,10 +18,10 @@ public class ItemDistribution {
     private static final Random random = new Random();
     public static void distributeCommands(Player player) {
 
-        List<String> commands = new ArrayList<>();
+        List<List<String>> commands = new ArrayList<>();
         List<Double> probabilities = new ArrayList<>();
         for(String key:ToastedAFK.instance.getConfig().getConfigurationSection("probability_commands").getKeys(false)) {
-            commands.add(ToastedAFK.instance.getConfig().getString("probability_commands."+key+".command"));
+            commands.add(ToastedAFK.instance.getConfig().getStringList("probability_commands."+key+".commands"));
             probabilities.add(ToastedAFK.instance.getConfig().getDouble("probability_commands."+key+".chance"));
         }
 
@@ -29,14 +29,11 @@ public class ItemDistribution {
         double totalProbability = probabilities.stream().mapToDouble(Double::doubleValue).sum();
         probabilities.replaceAll(aDouble -> aDouble / totalProbability * 100);
 
-        String command = getRandomItem(commands, probabilities);
-        try{Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("{player}", player.getName()));}
-        catch (Exception ignored){
-            Logger.log(Logger.LogLevel.ERROR, AFKUtil.c("&cThe command \"&f"+command+"&c\" doesn't work!"));
-        }
+        List<String> command = getRandomItem(commands, probabilities);
+        CoreHelpers.executeCommands(player,command);
     }
     // Helper method to retrieve a random item based on probabilities
-    private static String getRandomItem(List<String> commands, List<Double> probabilities) {
+    private static List<String> getRandomItem(List<List<String>> commands, List<Double> probabilities) {
         if (commands.size() != probabilities.size()) {
             throw new IllegalArgumentException("Items and probabilities must have the same size");
         }

@@ -6,13 +6,19 @@ public class PlayerStats {
     private int levelTimer;
     private float expTimer;
     private boolean xpEnabled;
-
-    public PlayerStats(int defaultAfkTime, int afkTimer, int levelTimer, float expTimer, boolean xpEnabled) {
+    private int timeoutTimes;
+    public PlayerStats(int defaultAfkTime,
+                       int afkTimer,
+                       int levelTimer,
+                       float expTimer,
+                       boolean xpEnabled,
+                       int timeoutTimes) {
         this.defaultAfkTime = defaultAfkTime;
         this.afkTimer = afkTimer;
         this.levelTimer = levelTimer;
         this.expTimer = expTimer;
         this.xpEnabled = xpEnabled;
+        this.timeoutTimes=timeoutTimes;
     }
     public int getDefaultAfkTime() {
         return defaultAfkTime;
@@ -31,5 +37,11 @@ public class PlayerStats {
     }
     public boolean isXpEnabled() {
         return xpEnabled;
+    }
+    public int getTimeoutTimes() {
+        return timeoutTimes;
+    }
+    public void setTimeoutTimes(int timeoutTimesToSet) {
+        timeoutTimes = timeoutTimes + timeoutTimesToSet;
     }
 }

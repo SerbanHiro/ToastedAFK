@@ -40,6 +40,7 @@ public class CoreHelpers {
     public static String playerLeft;
     public static String bossBarText;
     public static boolean useRewardSync;
+    public static int timeoutTimes;
     public static void readConfiguration() {
         schedulerTimer = ToastedAFK.instance.getConfig().getInt("how_often_all_players_and_region_checked");
         saveXpInsideRegion = ToastedAFK.instance.getConfig().getBoolean("save_xp_inside_region");
@@ -55,6 +56,7 @@ public class CoreHelpers {
         playerEntered = ToastedAFK.instance.getConfig().getString("player_entered_region");
         playerLeft = ToastedAFK.instance.getConfig().getString("player_left_region");
         useRewardSync = ToastedAFK.instance.getConfig().getBoolean("reward_synchronization");
+        timeoutTimes = ToastedAFK.instance.getConfig().getInt("timeout.times");
     }
     public static void updatePlayer(Player player) {
         if (actionBarShow) {
@@ -84,7 +86,7 @@ public class CoreHelpers {
         int defaultAfkTime = getDefaultAfkTime(player);
         boolean playerXpEnabled = saveXpInsideRegion || showXpBar;
         playerStats.putIfAbsent(player, new PlayerStats(defaultAfkTime, defaultAfkTime, player.getLevel(),
-                player.getExp(), playerXpEnabled));
+                player.getExp(), playerXpEnabled,timeoutTimes));
         if (showXpBar) {
             player.setExp(1.0f);
         }
@@ -120,8 +122,7 @@ public class CoreHelpers {
         }
         return defaultAfkTime;
     }
-    public static void executeCommands(Player player) {
-        List<String> commands = ToastedAFK.instance.getConfig().getStringList("commands");
+    public static void executeCommands(Player player, List<String> commands) {
         for(String command:commands) {
             command = command.replace("{player}",player.getName());
             try{Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);}
@@ -179,10 +180,16 @@ public class CoreHelpers {
                 ItemDistribution.distributeCommands(player);
             }
             if (useCommands) {
-                CoreHelpers.executeCommands(player);
+                CoreHelpers.executeCommands(player,ToastedAFK.instance.getConfig().getStringList("commands"));
             }
             if (useRandomFeature) {
                 CoreHelpers.executeRandomCommands(player);
+            }
+            if(timeoutTimes>0) {
+                if(playerStatistics.getTimeoutTimes()>=timeoutTimes) {
+                    CoreHelpers.executeCommands(player,ToastedAFK.instance.getConfig().getStringList("timeout.commands"));
+                    removePlayer(player);
+                }
             }
         } else {
             timeLeft-=schedulerTimer;
@@ -197,10 +204,16 @@ public class CoreHelpers {
                 ItemDistribution.distributeCommands(player);
             }
             if (useCommands) {
-                CoreHelpers.executeCommands(player);
+                CoreHelpers.executeCommands(player,ToastedAFK.instance.getConfig().getStringList("commands"));
             }
             if (useRandomFeature) {
                 CoreHelpers.executeRandomCommands(player);
+            }
+            if(timeoutTimes>0) {
+                if(playerStatistics.getTimeoutTimes()>=timeoutTimes) {
+                    CoreHelpers.executeCommands(player,ToastedAFK.instance.getConfig().getStringList("timeout.commands"));
+                    removePlayer(player);
+                }
             }
         }
         playerStatistics.setAfkTimer(globalSyncTime);

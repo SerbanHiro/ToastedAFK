@@ -41,6 +41,11 @@ player_entered_region: "&cYou &fentered &can afk region!"
 player_left_region: "&cYou just &fleft &cthe afk region!"
 show_xp_bar: true  # When player is inside the region, it will show the XP bar (BETA)
 save_xp_inside_region: false
+timeout:
+  times: 0 # put 0 to not use this feature
+  commands:
+    - "msg {player} you have been teleported back to spawn!"
+    # - "tp {player} -2217 94 -490"
 
 actionbar:
   show: false
@@ -96,13 +101,19 @@ random_commands:
 
 probability_commands:
   first_prob:
-    command: "msg {player} 50%"
+    commands:
+      - "msg {player} first_prob"
+      - "msg {player} 50%"
     chance: 50.0
   second_prob:
-    command: "msg {player} 35%"
+    commands:
+      - "msg {player} second_prob"
+      - "msg {player} 35%"
     chance: 35.0
   third_prob:
-    command: "msg {player} 15%"
+    commands:
+      - "msg {player} third_prob"
+      - "msg {player} 15%"
     chance: 15.0
 
 on_command_deny: "&cYou cannot use this command here"
