@@ -79,7 +79,8 @@ public class RegionRelatedEventsHandler implements Listener {
 
     @EventHandler
     public void onPlayerTeleport(PlayerTeleportEvent event) {
-        event.setCancelled(updateRegions(event.getPlayer(), CurrentMove.TELEPORT,event.getTo(),event));
+        //event.setCancelled(updateRegions(event.getPlayer(), CurrentMove.TELEPORT,event.getTo(),event));
+        updateRegions(event.getPlayer(), CurrentMove.TELEPORT,event.getTo(),event);
     }
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
