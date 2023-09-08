@@ -21,7 +21,7 @@ Add the JitPack repository to your repositories section:
 </repositories>
 ```
 
-Add ClickableHeads as a dependency:
+Add ToastedAFK as a dependency:
 ```xml
 <dependencies>
     <!-- Add ToastedAFK as a dependency -->
@@ -44,7 +44,7 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 ```
-Add ClickableHeads as a dependency:
+Add ToastedAFK as a dependency:
 ```groovy
 dependencies {
     // Add ClickableHeads as a dependency
