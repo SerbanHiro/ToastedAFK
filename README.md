@@ -74,3 +74,27 @@ playerStatsPlayer.isXpEnabled() --> this returns whether the player has been usi
 playerStatsPlayer.getTimeoutTimes() --> this will return how many times the player has received the rewards until he will be executed some timeout commands
 playerStatsPlayer.setTimeoutTimes() --> this is how you can set how many times the player can receive rewards until some commands will be executed
 ```
+
+### Events
+
+There are 2 events, OnRegionEnteredEvent and OnRegionLeftEvent
+```java
+import me.serbob.toastedafk.API.Events.OnRegionEnteredEvent;
+import me.serbob.toastedafk.API.Events.OnRegionLeftEvent;
+
+// other classes
+
+public class PlayerRegionHandler implements Listener {
+    @EventHandler
+    public void onRegionEnter(OnRegionEnteredEvent event) {
+        Player player = event.getPlayer();
+        // do something here
+    }
+
+    @EventHandler
+    public void onRegionLeft(OnRegionLeftEvent event) {
+        Player player = event.getPlayer();
+        // do something here
+    }
+}
+```
