@@ -8,7 +8,7 @@
 
 <details>
   <summary>Setting up ToastedAFK with Maven</summary>
-  Open your project's pom.xml file.
+Open your project's pom.xml file.
 
 Add the JitPack repository to your repositories section:
 ```xml
@@ -36,7 +36,7 @@ Add ClickableHeads as a dependency:
 <details>
 <summary>Setting up ToastedAFK with Gradle</summary>
 Open your project's build.gradle file.
-
+  
 Add the JitPack repository to your repositories block:
 ```groovy
 repositories {
