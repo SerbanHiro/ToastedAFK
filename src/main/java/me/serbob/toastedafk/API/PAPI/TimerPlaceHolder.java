@@ -1,4 +1,4 @@
-package me.serbob.toastedafk.Placeholders;
+package me.serbob.toastedafk.API.PAPI;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.serbob.toastedafk.Templates.ActionBar;

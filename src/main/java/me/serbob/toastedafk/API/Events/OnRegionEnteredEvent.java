@@ -1,19 +1,23 @@
-package me.serbob.toastedafk.Events.Custom;
+package me.serbob.toastedafk.API.Events;
 
 import me.serbob.toastedafk.Enums.CurrentMove;
+import me.serbob.toastedafk.Events.Custom.ToastedRegionEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.player.PlayerEvent;
+import org.jetbrains.annotations.NotNull;
 
-public class OnRegionLeftEvent extends ToastedRegionEvent implements Cancellable {
+public class OnRegionEnteredEvent extends ToastedRegionEvent implements Cancellable {
     private boolean cancelled;
     private boolean cancellable;
-    public OnRegionLeftEvent(Player player, CurrentMove movement, PlayerEvent parent) {
-        super(player, movement, parent);
+
+    public OnRegionEnteredEvent(@NotNull Player player, CurrentMove movementWay, PlayerEvent parent) {
+        super(player, movementWay, parent);
         this.cancelled = false;
         this.cancellable = true;
-        if (movement == CurrentMove.SPAWN || movement == CurrentMove.DISCONNECT)
+        if(movementWay == CurrentMove.SPAWN || movementWay == CurrentMove.DISCONNECT) {
             this.cancellable = false;
+        }
     }
     @Override
     public void setCancelled(boolean cancelled) {

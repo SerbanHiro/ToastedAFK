@@ -1,8 +1,8 @@
 package me.serbob.toastedafk.Events.Custom.Listener;
 
 import me.serbob.toastedafk.Enums.CurrentMove;
-import me.serbob.toastedafk.Events.Custom.OnRegionEnteredEvent;
-import me.serbob.toastedafk.Events.Custom.OnRegionLeftEvent;
+import me.serbob.toastedafk.API.Events.OnRegionEnteredEvent;
+import me.serbob.toastedafk.API.Events.OnRegionLeftEvent;
 import me.serbob.toastedafk.ToastedAFK;
 import me.serbob.toastedafk.Utils.RegionUtils;
 import org.bukkit.Location;
@@ -10,10 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.*;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
 
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static me.serbob.toastedafk.Managers.ValuesManager.*;
