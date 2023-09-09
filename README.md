@@ -47,7 +47,7 @@ repositories {
 Add ToastedAFK as a dependency:
 ```groovy
 dependencies {
-    // Add ClickableHeads as a dependency
+    // Add ToastedAFK as a dependency
     implementation 'com.github.SerbanHiro:ToastedAFK:VERSION' // Replace with the desired version
 }
 ```
