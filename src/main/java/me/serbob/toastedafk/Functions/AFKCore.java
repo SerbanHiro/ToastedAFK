@@ -5,6 +5,7 @@ import me.serbob.toastedafk.Managers.ValuesManager;
 import me.serbob.toastedafk.Templates.ActionBar;
 import me.serbob.toastedafk.Templates.CoreHelpers;
 import me.serbob.toastedafk.Templates.ItemDistribution;
+import me.serbob.toastedafk.Templates.LoadingScreen;
 import me.serbob.toastedafk.ToastedAFK;
 import me.serbob.toastedafk.Utils.*;
 import net.md_5.bungee.api.ChatMessageType;

@@ -59,6 +59,7 @@ public class CoreHelpers {
         timeoutTimes = ToastedAFK.instance.getConfig().getInt("timeout.times");
     }
     public static void updatePlayer(Player player) {
+        System.out.println(playerStats.get(player).getAfkTimer()+"");
         if (actionBarShow) {
             sendALLVersionsActionBar(player);
         }
@@ -85,7 +86,8 @@ public class CoreHelpers {
         sendCUSTOMAllVersionsTitleScreen(player,playerEntered);
         int defaultAfkTime = getDefaultAfkTime(player);
         boolean playerXpEnabled = saveXpInsideRegion || showXpBar;
-        playerStats.putIfAbsent(player, new PlayerStats(defaultAfkTime, defaultAfkTime, player.getLevel(),
+        playerStats.putIfAbsent(player, new PlayerStats(useRewardSync ? DEFAULT_AFK_TIME : defaultAfkTime,
+                useRewardSync ? globalSyncTime : defaultAfkTime, player.getLevel(),
                 player.getExp(), playerXpEnabled,timeoutTimes));
         if (showXpBar) {
             player.setExp(1.0f);
@@ -93,8 +95,6 @@ public class CoreHelpers {
         if (bossBarShow) {
             bossBar.addPlayer(player);
         }
-        if(useRewardSync)
-            playerStats.get(player).setAfkTimer(globalSyncTime);
     }
     public static void removePlayer(Player player) {
         //AFKCore.getInstance().removePlayerFromCache(player); <-- Used for caching, not using it yet
@@ -198,7 +198,8 @@ public class CoreHelpers {
     }
     public static void updatePlayerStatsSynchronized(Player player) {
         PlayerStats playerStatistics = playerStats.get(player);
-        if(playerStatistics.getAfkTimer()==0) {
+        int timeLeft = playerStatistics.getAfkTimer();
+        if(timeLeft<=0) {
             playerStatistics.setAfkTimer(playerStatistics.getDefaultAfkTime());
             if (useProbabilityFeature) {
                 ItemDistribution.distributeCommands(player);
@@ -215,7 +216,8 @@ public class CoreHelpers {
                     removePlayer(player);
                 }
             }
+        } else {
+            playerStatistics.setAfkTimer(globalSyncTime);
         }
-        playerStatistics.setAfkTimer(globalSyncTime);
     }
 }
