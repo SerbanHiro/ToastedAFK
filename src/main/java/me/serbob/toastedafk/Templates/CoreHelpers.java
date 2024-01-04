@@ -1,5 +1,6 @@
 package me.serbob.toastedafk.Templates;
 
+import me.serbob.toastedafk.API.Events.AFKRewardEvent;
 import me.serbob.toastedafk.Classes.PlayerStats;
 import me.serbob.toastedafk.Functions.AFKCore;
 import me.serbob.toastedafk.Managers.AFKManager;
@@ -59,7 +60,7 @@ public class CoreHelpers {
         timeoutTimes = ToastedAFK.instance.getConfig().getInt("timeout.times");
     }
     public static void updatePlayer(Player player) {
-        System.out.println(playerStats.get(player).getAfkTimer()+"");
+        //System.out.println(playerStats.get(player).getAfkTimer()+"");
         if (actionBarShow) {
             sendALLVersionsActionBar(player);
         }
@@ -185,6 +186,10 @@ public class CoreHelpers {
             if (useRandomFeature) {
                 CoreHelpers.executeRandomCommands(player);
             }
+
+            AFKRewardEvent afkRewardEvent = new AFKRewardEvent(player,playerStatistics);
+            ToastedAFK.instance.getServer().getPluginManager().callEvent(afkRewardEvent);
+
             if(timeoutTimes>0) {
                 if(playerStatistics.getTimeoutTimes()>=timeoutTimes) {
                     CoreHelpers.executeCommands(player,ToastedAFK.instance.getConfig().getStringList("timeout.commands"));
@@ -210,6 +215,10 @@ public class CoreHelpers {
             if (useRandomFeature) {
                 CoreHelpers.executeRandomCommands(player);
             }
+
+            AFKRewardEvent afkRewardEvent = new AFKRewardEvent(player,playerStatistics);
+            ToastedAFK.instance.getServer().getPluginManager().callEvent(afkRewardEvent);
+
             if(timeoutTimes>0) {
                 if(playerStatistics.getTimeoutTimes()>=timeoutTimes) {
                     CoreHelpers.executeCommands(player,ToastedAFK.instance.getConfig().getStringList("timeout.commands"));

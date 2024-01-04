@@ -1,5 +1,6 @@
 package me.serbob.toastedafk.Events.Custom;
 
+import me.serbob.toastedafk.API.Events.AFKRewardEvent;
 import me.serbob.toastedafk.API.Events.OnRegionEnteredEvent;
 import me.serbob.toastedafk.API.Events.OnRegionLeftEvent;
 import org.bukkit.entity.Player;
@@ -20,5 +21,10 @@ public class PlayerRegionHandler implements Listener {
     public void onRegionLeft(OnRegionLeftEvent event) {
         Player player = event.getPlayer();
         removePlayer(player);
+    }
+
+    @EventHandler
+    public void onRewardReceived(AFKRewardEvent event) {
+        System.out.println("PLAYER: "+event.getPlayer()+" has received: "+event.getPlayerStats());
     }
 }
