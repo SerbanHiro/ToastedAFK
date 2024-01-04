@@ -77,10 +77,11 @@ playerStatsPlayer.setTimeoutTimes() --> this is how you can set how many times t
 
 ### Events
 
-There are 2 events, OnRegionEnteredEvent and OnRegionLeftEvent
+There are 3 events, OnRegionEnteredEvent, OnRegionLeftEvent and AFKRewardEvent
 ```java
 import me.serbob.toastedafk.API.Events.OnRegionEnteredEvent;
 import me.serbob.toastedafk.API.Events.OnRegionLeftEvent;
+import me.serbob.toastedafk.API.Events.AFKRewardEvent;
 
 // other classes
 
@@ -95,6 +96,11 @@ public class PlayerRegionHandler implements Listener {
     public void onRegionLeft(OnRegionLeftEvent event) {
         Player player = event.getPlayer();
         // do something here
+    }
+
+    @EventHandler
+    public void onRewardReceived(AFKRewardEvent event) {
+        System.out.println("PLAYER: "+event.getPlayer()+" has received: "+event.getPlayerStats());
     }
 }
 ```
