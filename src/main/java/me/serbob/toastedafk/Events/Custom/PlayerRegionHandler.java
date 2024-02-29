@@ -25,6 +25,6 @@ public class PlayerRegionHandler implements Listener {
 
     @EventHandler
     public void onRewardReceived(AFKRewardEvent event) {
-        System.out.println("PLAYER: "+event.getPlayer()+" has received: "+event.getPlayerStats());
+
     }
 }

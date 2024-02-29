@@ -9,6 +9,7 @@ import me.serbob.toastedafk.NMS.Usages.RefTitle;
 import me.serbob.toastedafk.ToastedAFK;
 import me.serbob.toastedafk.Utils.AFKUtil;
 import me.serbob.toastedafk.Utils.Logger;
+import me.serbob.toastedafk.Utils.RegionUtils;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -61,6 +62,10 @@ public class CoreHelpers {
     }
     public static void updatePlayer(Player player) {
         //System.out.println(playerStats.get(player).getAfkTimer()+"");
+        if(!player.isOnline() || !RegionUtils.playerInCubiod(player.getLocation(),loc1,loc2)) {
+            removePlayer(player);
+            return;
+        }
         if (actionBarShow) {
             sendALLVersionsActionBar(player);
         }

@@ -14,6 +14,7 @@ import org.bukkit.event.player.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static me.serbob.toastedafk.Managers.ValuesManager.*;
+import static me.serbob.toastedafk.Templates.CoreHelpers.removePlayer;
 
 public class RegionRelatedEventsHandler implements Listener {
     @EventHandler
@@ -25,7 +26,7 @@ public class RegionRelatedEventsHandler implements Listener {
             ToastedAFK.instance.getServer().getPluginManager().callEvent(leaveEvent);
         } else {
             if(playerStats.containsKey(event.getPlayer())) {
-                playerStats.remove(event.getPlayer());
+                removePlayer(event.getPlayer());
             }
         }
     }
@@ -38,7 +39,7 @@ public class RegionRelatedEventsHandler implements Listener {
             ToastedAFK.instance.getServer().getPluginManager().callEvent(leaveEvent);
         } else {
             if(playerStats.containsKey(event.getPlayer())) {
-                playerStats.remove(event.getPlayer());
+                removePlayer(event.getPlayer());
             }
         }
     }

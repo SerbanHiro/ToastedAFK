@@ -153,7 +153,6 @@ public class AFKCommand implements CommandExecutor {
             if(sender.hasPermission("afk.check")) {
                 Player player = (Player) sender;
                 sender.sendMessage(player.getItemInHand() + "");
-                System.out.println(player.getItemInHand() + "");
             } else {
                 noPermission(sender);
                 return false;
