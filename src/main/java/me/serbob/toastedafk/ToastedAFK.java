@@ -1,6 +1,7 @@
 package me.serbob.toastedafk;
 
 import me.serbob.toastedafk.Classes.Metrics;
+import me.serbob.toastedafk.Classes.PlayerStats;
 import me.serbob.toastedafk.Managers.AFKManager;
 import me.serbob.toastedafk.Managers.ValuesManager;
 import me.serbob.toastedafk.API.PAPI.TimerPlaceHolder;
@@ -33,6 +34,9 @@ public final class ToastedAFK extends JavaPlugin {
         if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new TimerPlaceHolder().register();
         }
+        /**getServer().getScheduler().runTaskTimer(this, () -> {
+            System.out.println(ValuesManager.playerStats);
+        },20L,10L);*/
     }
     @Override
     public void onDisable() {

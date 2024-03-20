@@ -3,6 +3,7 @@ package me.serbob.toastedafk.Events.Custom.Listener;
 import me.serbob.toastedafk.Enums.CurrentMove;
 import me.serbob.toastedafk.API.Events.OnRegionEnteredEvent;
 import me.serbob.toastedafk.API.Events.OnRegionLeftEvent;
+import me.serbob.toastedafk.Thread.Tasks;
 import me.serbob.toastedafk.ToastedAFK;
 import me.serbob.toastedafk.Utils.RegionUtils;
 import org.bukkit.Location;
@@ -11,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.*;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static me.serbob.toastedafk.Managers.ValuesManager.*;
@@ -89,18 +91,24 @@ public class RegionRelatedEventsHandler implements Listener {
         updateRegions(event.getPlayer(), CurrentMove.SPAWN,event.getRespawnLocation(),event);
     }
     private boolean updateRegions(Player player, CurrentMove movementWay, Location to, PlayerEvent event) {
-        if(!RegionUtils.playerInCubiod(to,loc1,loc2)
-        /**!RegionUtils.getPlayersInRegion(to,ToastedAFK.instance.getConfig().getString("wg_region"),ToastedAFK.instance)*/) {
-            if(playerStats.containsKey(player)) {
-                OnRegionLeftEvent regionLeftEvent = new OnRegionLeftEvent(player,movementWay,event);
-                ToastedAFK.instance.getServer().getPluginManager().callEvent(regionLeftEvent);
+        CompletableFuture.runAsync(() -> {
+            if(!RegionUtils.playerInCubiod(to,loc1,loc2)
+            /**!RegionUtils.getPlayersInRegion(to,ToastedAFK.instance.getConfig().getString("wg_region"),ToastedAFK.instance)*/) {
+                if(playerStats.containsKey(player)) {
+                    OnRegionLeftEvent regionLeftEvent = new OnRegionLeftEvent(player,movementWay,event);
+                    Tasks.sync(() -> {
+                        ToastedAFK.instance.getServer().getPluginManager().callEvent(regionLeftEvent);
+                    });
+                }
+            } else {
+                if(!playerStats.containsKey(player)) {
+                    OnRegionEnteredEvent regionEnteredEvent = new OnRegionEnteredEvent(player, movementWay, event);
+                    Tasks.sync(() -> {
+                        ToastedAFK.instance.getServer().getPluginManager().callEvent(regionEnteredEvent);
+                    });
+                }
             }
-        } else {
-            if(!playerStats.containsKey(player)) {
-                OnRegionEnteredEvent regionEnteredEvent = new OnRegionEnteredEvent(player, movementWay, event);
-                ToastedAFK.instance.getServer().getPluginManager().callEvent(regionEnteredEvent);
-            }
-        }
+        });
         return false;
     }
 }

@@ -12,6 +12,7 @@ import org.bukkit.inventory.EquipmentSlot;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static me.serbob.toastedafk.Managers.ValuesManager.tempLoc1;
 import static me.serbob.toastedafk.Managers.ValuesManager.tempLoc2;
@@ -19,6 +20,9 @@ import static me.serbob.toastedafk.Managers.ValuesManager.tempLoc2;
 public class WandEvents implements Listener {
     @EventHandler
     public void onBlockInteract(PlayerInteractEvent event) {
+        if (!event.getPlayer().hasPermission("afkwand.use")) {
+            return;
+        }
         try {
             if (event.getPlayer().getItemInHand() == null ||
                     !event.getPlayer().getItemInHand().hasItemMeta()) {
@@ -35,9 +39,6 @@ public class WandEvents implements Listener {
                     }
                 }
                 if (ok == 0) {
-                    return;
-                }
-                if (!event.getPlayer().hasPermission("afkwand.use")) {
                     return;
                 }
                 if (event.getAction().name().contains("LEFT")) {

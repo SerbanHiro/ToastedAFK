@@ -89,8 +89,9 @@ public class CoreHelpers {
         }
     }
     public static void addPlayer(Player player) {
-        sendCUSTOMAllVersionsTitleScreen(player,playerEntered);
         int defaultAfkTime = getDefaultAfkTime(player);
+        if(defaultAfkTime==-1) return;
+        sendCUSTOMAllVersionsTitleScreen(player,playerEntered);
         boolean playerXpEnabled = saveXpInsideRegion || showXpBar;
         playerStats.putIfAbsent(player, new PlayerStats(useRewardSync ? DEFAULT_AFK_TIME : defaultAfkTime,
                 useRewardSync ? globalSyncTime : defaultAfkTime, player.getLevel(),
@@ -121,7 +122,7 @@ public class CoreHelpers {
         for (String key : ToastedAFK.instance.getConfig().getConfigurationSection("afk_times").getKeys(false)) {
             if (player.hasPermission("afk.perm." + key)) {
                 int perm_time = ToastedAFK.instance.getConfig().getInt("afk_times." + key);
-                if (defaultAfkTime > perm_time) {
+                if (defaultAfkTime > perm_time || defaultAfkTime == -1) {
                     defaultAfkTime = perm_time;
                 }
             }

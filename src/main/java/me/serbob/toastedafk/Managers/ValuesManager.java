@@ -19,7 +19,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ValuesManager {
-    public static Map<Player, PlayerStats> playerStats = new HashMap<>();
+    public static Map<Player, PlayerStats> playerStats = new ConcurrentHashMap<>();
     public static int TIMEOUT_SECONDS=1200; // 20 minutes in seconds
     public static int DEFAULT_AFK_TIME;
     public static World globalWorld;
