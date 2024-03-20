@@ -30,7 +30,7 @@ public class AFKManager {
     }
     public static void startScheduler() {
         BukkitScheduler scheduler = ToastedAFK.instance.getServer().getScheduler();
-        scheduler.scheduleSyncRepeatingTask(ToastedAFK.instance, () -> {
+        scheduler.scheduleAsyncRepeatingTask(ToastedAFK.instance, () -> {
             //Bukkit.getScheduler().runTaskAsynchronously(ToastedAFK.instance, () -> {
                 // Execute addOrRemovePlayers() in a separate thread
                 AFKCore.getInstance().addOrRemovePlayers();

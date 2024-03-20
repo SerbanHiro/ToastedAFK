@@ -33,11 +33,11 @@ public class AFKCore {
         return instance;
     }
     public void addOrRemovePlayers() {
+        if(playerStats == null) return;
         --globalSyncTime;
-        playerStats.entrySet().forEach(entry -> {
-            Player player = entry.getKey();
-            updatePlayer(player);
-        });
+        for (Map.Entry<Player, PlayerStats> playerPlayerStatsEntry : playerStats.entrySet()) {
+            updatePlayer(playerPlayerStatsEntry.getKey());
+        }
         if(globalSyncTime==0)
             globalSyncTime=DEFAULT_AFK_TIME+1;
     }
