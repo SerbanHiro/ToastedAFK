@@ -6,6 +6,7 @@ import me.serbob.toastedafk.Functions.AFKCore;
 import me.serbob.toastedafk.Managers.AFKManager;
 import me.serbob.toastedafk.NMS.Usages.RefActionbar;
 import me.serbob.toastedafk.NMS.Usages.RefTitle;
+import me.serbob.toastedafk.Thread.Tasks;
 import me.serbob.toastedafk.ToastedAFK;
 import me.serbob.toastedafk.Utils.AFKUtil;
 import me.serbob.toastedafk.Utils.Logger;
@@ -130,32 +131,36 @@ public class CoreHelpers {
         return defaultAfkTime;
     }
     public static void executeCommands(Player player, List<String> commands) {
-        for(String command:commands) {
-            command = command.replace("{player}",player.getName());
-            try{Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);}
-            catch (Exception ignored){
-                Logger.log(Logger.LogLevel.ERROR,AFKUtil.c("&cThe command \"&f"+command+"&c\" doesn't work!"));
+        Tasks.sync(() -> {
+            for(String command:commands) {
+                command = command.replace("{player}",player.getName());
+                try{Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);}
+                catch (Exception ignored){
+                    Logger.log(Logger.LogLevel.ERROR,AFKUtil.c("&cThe command \"&f"+command+"&c\" doesn't work!"));
+                }
             }
-        }
+        });
     }
     public static void executeRandomCommands(Player player) {
-        List<String> commands = new ArrayList<>(ToastedAFK.instance.getConfig().getConfigurationSection("random_commands.list").getKeys(false));
-        int timesToExecute = ToastedAFK.instance.getConfig().getInt("random_commands.times");
-        for (int i = 0; i < timesToExecute; i++) {
-            Collections.shuffle(commands);
-            if (!commands.isEmpty()) {
-                int randomIndex = ThreadLocalRandom.current().nextInt(commands.size());
-                String listToBeExec = commands.get(randomIndex);
-                for(String command:ToastedAFK.instance.getConfig().getStringList("random_commands.list."+listToBeExec)) {
-                    command = command.replace("{player}", player.getName());
-                    try {
-                        ToastedAFK.instance.getServer().dispatchCommand(ToastedAFK.instance.getServer().getConsoleSender(), command);
-                    } catch (Exception ignored) {
-                        Logger.log(Logger.LogLevel.ERROR, AFKUtil.c("&cThe command \"&f" + command + "&c\" doesn't work!"));
+        Tasks.sync(()-> {
+            List<String> commands = new ArrayList<>(ToastedAFK.instance.getConfig().getConfigurationSection("random_commands.list").getKeys(false));
+            int timesToExecute = ToastedAFK.instance.getConfig().getInt("random_commands.times");
+            for (int i = 0; i < timesToExecute; i++) {
+                Collections.shuffle(commands);
+                if (!commands.isEmpty()) {
+                    int randomIndex = ThreadLocalRandom.current().nextInt(commands.size());
+                    String listToBeExec = commands.get(randomIndex);
+                    for(String command:ToastedAFK.instance.getConfig().getStringList("random_commands.list."+listToBeExec)) {
+                        command = command.replace("{player}", player.getName());
+                        try {
+                            ToastedAFK.instance.getServer().dispatchCommand(ToastedAFK.instance.getServer().getConsoleSender(), command);
+                        } catch (Exception ignored) {
+                            Logger.log(Logger.LogLevel.ERROR, AFKUtil.c("&cThe command \"&f" + command + "&c\" doesn't work!"));
+                        }
                     }
                 }
             }
-        }
+        });
     }
     public static void serverCrash() {
         Iterator<Map.Entry<Player, PlayerStats>> iterator = playerStats.entrySet().iterator();
@@ -193,8 +198,10 @@ public class CoreHelpers {
                 CoreHelpers.executeRandomCommands(player);
             }
 
-            AFKRewardEvent afkRewardEvent = new AFKRewardEvent(player,playerStatistics);
-            ToastedAFK.instance.getServer().getPluginManager().callEvent(afkRewardEvent);
+            Tasks.sync(()-> {
+                AFKRewardEvent afkRewardEvent = new AFKRewardEvent(player,playerStatistics);
+                ToastedAFK.instance.getServer().getPluginManager().callEvent(afkRewardEvent);
+            });
 
             if(timeoutTimes>0) {
                 if(playerStatistics.getTimeoutTimes()>=timeoutTimes) {
@@ -222,8 +229,10 @@ public class CoreHelpers {
                 CoreHelpers.executeRandomCommands(player);
             }
 
-            AFKRewardEvent afkRewardEvent = new AFKRewardEvent(player,playerStatistics);
-            ToastedAFK.instance.getServer().getPluginManager().callEvent(afkRewardEvent);
+            Tasks.sync(() -> {
+                AFKRewardEvent afkRewardEvent = new AFKRewardEvent(player,playerStatistics);
+                ToastedAFK.instance.getServer().getPluginManager().callEvent(afkRewardEvent);
+            });
 
             if(timeoutTimes>0) {
                 if(playerStatistics.getTimeoutTimes()>=timeoutTimes) {
