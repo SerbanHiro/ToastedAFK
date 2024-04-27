@@ -12,6 +12,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -20,30 +22,19 @@ import static me.serbob.toastedafk.Templates.CoreHelpers.removePlayer;
 
 public class RegionRelatedEventsHandler implements Listener {
     @EventHandler
-    public void onPlayerKick(PlayerKickEvent event) {
-        if(RegionUtils.playerInCubiod(event.getPlayer().getLocation(),loc1,loc2)
-                /**RegionUtils.getPlayersInRegion(event.getPlayer().getLocation(),
-                        ToastedAFK.instance.getConfig().getString("wg_region"),ToastedAFK.instance)*/) {
-            OnRegionLeftEvent leaveEvent = new OnRegionLeftEvent(event.getPlayer(), CurrentMove.DISCONNECT, event);
-            ToastedAFK.instance.getServer().getPluginManager().callEvent(leaveEvent);
-        } else {
-            if(playerStats.containsKey(event.getPlayer())) {
-                removePlayer(event.getPlayer());
-            }
-        }
-    }
-    @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        if(RegionUtils.playerInCubiod(event.getPlayer().getLocation(),loc1,loc2)
+        Player player = event.getPlayer();
+        if(RegionUtils.playerInCubiod(player.getLocation(),loc1,loc2)
                 /**RegionUtils.getPlayersInRegion(event.getPlayer().getLocation(),
                         ToastedAFK.instance.getConfig().getString("wg_region"),ToastedAFK.instance)*/) {
-            OnRegionLeftEvent leaveEvent = new OnRegionLeftEvent(event.getPlayer(), CurrentMove.DISCONNECT, event);
+            OnRegionLeftEvent leaveEvent = new OnRegionLeftEvent(player, CurrentMove.DISCONNECT, event);
             ToastedAFK.instance.getServer().getPluginManager().callEvent(leaveEvent);
         } else {
-            if(playerStats.containsKey(event.getPlayer())) {
-                removePlayer(event.getPlayer());
+            if(playerStats.containsKey(player)) {
+                removePlayer(player);
             }
         }
+        lastMovementTimes.remove(player);
     }
     /**@EventHandler <-- might use this but for the moment using concurrenthashmaps seems to be more efficient
     public void onPlayerMove(PlayerMoveEvent event) {
@@ -58,15 +49,15 @@ public class RegionRelatedEventsHandler implements Listener {
         event.setCancelled(updateRegions(player, CurrentMove.MOVE, event.getTo(), (PlayerEvent)event));
         player.setMetadata("lastMovementTime", (MetadataValue)new FixedMetadataValue((Plugin)ToastedAFK.instance, Long.valueOf(currentTime)));
     }*/
-    private final ConcurrentHashMap<Player, Long> lastMovementTimes = new ConcurrentHashMap<>();
+    private final Map<Player, Long> lastMovementTimes = new HashMap<>();
     private static final long MOVEMENT_THROTTLE_DELAY = 1000; // 1 second
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         long currentTime = System.currentTimeMillis();
 
-        if (lastMovementTimes.containsKey(player)) {
-            long lastMovementTime = lastMovementTimes.get(player);
+        Long lastMovementTime = lastMovementTimes.get(player);
+        if (lastMovementTime != null) {
             if (currentTime - lastMovementTime < MOVEMENT_THROTTLE_DELAY) {
                 return; // Skip event handling if the movement occurred too soon
             }
