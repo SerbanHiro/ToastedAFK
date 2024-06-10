@@ -14,6 +14,7 @@ import org.bukkit.event.player.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -49,23 +50,23 @@ public class RegionRelatedEventsHandler implements Listener {
         event.setCancelled(updateRegions(player, CurrentMove.MOVE, event.getTo(), (PlayerEvent)event));
         player.setMetadata("lastMovementTime", (MetadataValue)new FixedMetadataValue((Plugin)ToastedAFK.instance, Long.valueOf(currentTime)));
     }*/
-    private final Map<Player, Long> lastMovementTimes = new HashMap<>();
+    private final Map<UUID, Long> lastMovementTimes = new HashMap<>();
     private static final long MOVEMENT_THROTTLE_DELAY = 1000; // 1 second
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        Player player = event.getPlayer();
+        UUID uuid = event.getPlayer().getUniqueId();
         long currentTime = System.currentTimeMillis();
 
-        Long lastMovementTime = lastMovementTimes.get(player);
+        Long lastMovementTime = lastMovementTimes.get(uuid);
         if (lastMovementTime != null) {
             if (currentTime - lastMovementTime < MOVEMENT_THROTTLE_DELAY) {
                 return; // Skip event handling if the movement occurred too soon
             }
         }
         // Process the movement event
-        event.setCancelled(updateRegions(player, CurrentMove.MOVE, event.getTo(), event));
+        event.setCancelled(updateRegions(event.getPlayer(), CurrentMove.MOVE, event.getTo(), event));
         // Update the last movement time for the player
-        lastMovementTimes.put(player, currentTime);
+        lastMovementTimes.put(uuid, currentTime);
     }
 
     @EventHandler
