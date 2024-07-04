@@ -6,7 +6,8 @@ public class VersionManager {
     public static boolean isVersion1_12OrBelow() {
         boolean check;
 
-        if(Bukkit.getBukkitVersion().contains("1.20.6")) {
+        if(Bukkit.getBukkitVersion().contains("1.20.6") ||
+        Bukkit.getBukkitVersion().contains("1.21")) {
             return false;
         }
 
@@ -23,7 +24,8 @@ public class VersionManager {
         return check;
     }
     public static boolean isVersion1_8OrAbove() {
-        if(Bukkit.getBukkitVersion().contains("1.20.6")) {
+        if(Bukkit.getBukkitVersion().contains("1.20.6") ||
+                Bukkit.getBukkitVersion().contains("1.21")) {
             return true;
         }
 
@@ -35,7 +37,8 @@ public class VersionManager {
         return majorVersion >= 1 && minorVersion >= 8;
     }
     public static boolean isVersion1_8() {
-        if(Bukkit.getBukkitVersion().contains("1.20.6")) {
+        if(Bukkit.getBukkitVersion().contains("1.20.6") ||
+                Bukkit.getBukkitVersion().contains("1.21")) {
             return false;
         }
 
