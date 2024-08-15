@@ -5,27 +5,28 @@ import org.bukkit.entity.Player;
 
 import java.lang.reflect.Constructor;
 
-import static me.serbob.toastedafk.NMS.Reflection.createIChatBaseComponent;
-import static me.serbob.toastedafk.NMS.Reflection.getNMSClass;
-
 public class RefActionbar {
+    private static final byte ACTION_BAR_MESSAGE_TYPE = 2;
+
     public static void sendActionBarPacket(Player player, String actionbarText) {
         Object playerHandle = Reflection.getPlayerHandle(player);
         Object playerConnection = Reflection.getPlayerConnection(playerHandle);
-        Object actionbarPacket = RefActionbar.createActionbarPacket(actionbarText);
-        Reflection.sendPacket(playerConnection, actionbarPacket);
+        Object actionbarPacket = createActionbarPacket(actionbarText);
+        if (actionbarPacket != null) {
+            Reflection.sendPacket(playerConnection, actionbarPacket);
+        }
     }
-    public static Object createActionbarPacket(String component) {
-        try {
-            Class<?> actionBarPacketClass = getNMSClass("PacketPlayOutChat");
 
-            Object chatComponent = createIChatBaseComponent(component);
+    private static Object createActionbarPacket(String component) {
+        try {
+            Class<?> actionBarPacketClass = Reflection.getNMSClass("PacketPlayOutChat");
+            Object chatComponent = Reflection.createIChatBaseComponent(component);
 
             Constructor<?> actionBarPacketConstructor = actionBarPacketClass.getConstructor(
-                    getNMSClass("IChatBaseComponent"), byte.class);
-            byte actionBarMessageType = 2;
-            return actionBarPacketConstructor.newInstance(chatComponent, actionBarMessageType);
+                    Reflection.getNMSClass("IChatBaseComponent"), byte.class);
+            return actionBarPacketConstructor.newInstance(chatComponent, ACTION_BAR_MESSAGE_TYPE);
         } catch (Exception ex) {
+            ex.printStackTrace();
             return null;
         }
     }

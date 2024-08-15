@@ -8,19 +8,19 @@ public class Logger {
 
         switch (level) {
             case ERROR:
-                Bukkit.getConsoleSender().sendMessage(AFKUtil.c("&8[&c&lERROR&r&8] &f" + message));
+                Bukkit.getConsoleSender().sendMessage(ChatUtil.c("&8[&c&lERROR&r&8] &f" + message));
                 break;
             case WARNING:
-                Bukkit.getConsoleSender().sendMessage(AFKUtil.c("&c&k&lWARNING &8» &f" + message));
+                Bukkit.getConsoleSender().sendMessage(ChatUtil.c("&c&k&lWARNING &8» &f" + message));
                 break;
             case INFO:
-                Bukkit.getConsoleSender().sendMessage(AFKUtil.c("&x&f&f&a&d&6&1&lINFO&r &8» &f" + message));
+                Bukkit.getConsoleSender().sendMessage(ChatUtil.c("&x&f&f&a&d&6&1&lINFO&r &8» &f" + message));
                 break;
             case SUCCESS:
-                Bukkit.getConsoleSender().sendMessage(AFKUtil.c("&a&lSUCCESS &8» &f" + message));
+                Bukkit.getConsoleSender().sendMessage(ChatUtil.c("&a&lSUCCESS &8» &f" + message));
                 break;
             case OUTLINE:
-                Bukkit.getConsoleSender().sendMessage(AFKUtil.c("&8&l&m{message}"
+                Bukkit.getConsoleSender().sendMessage(ChatUtil.c("&8&l&m{message}"
                         .replace("{message}",message)));
                 break;
         }

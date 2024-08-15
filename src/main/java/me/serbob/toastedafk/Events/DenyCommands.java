@@ -1,7 +1,7 @@
 package me.serbob.toastedafk.Events;
 
 import me.serbob.toastedafk.ToastedAFK;
-import me.serbob.toastedafk.Utils.AFKUtil;
+import me.serbob.toastedafk.Utils.ChatUtil;
 import me.serbob.toastedafk.Utils.RegionUtils;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,7 +16,7 @@ public class DenyCommands implements Listener {
         if(RegionUtils.playerInCubiod(event.getPlayer().getLocation(), loc1, loc2)) {
             String cmd = event.getMessage();
             if (ToastedAFK.instance.getConfig().getStringList("denied_commands").contains(cmd)) {
-                event.getPlayer().sendMessage(AFKUtil.c(ToastedAFK.instance.getConfig().getString("on_command_deny")));
+                event.getPlayer().sendMessage(ChatUtil.c(ToastedAFK.instance.getConfig().getString("on_command_deny")));
                 event.setCancelled(true);
             }
         }

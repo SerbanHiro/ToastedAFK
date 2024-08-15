@@ -7,11 +7,14 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 public class Reflection {
+    private static final String VERSION = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+
     public static Object getPlayerHandle(Player player) {
         try {
             Method getHandleMethod = player.getClass().getMethod("getHandle");
             return getHandleMethod.invoke(player);
         } catch (Exception ex) {
+            ex.printStackTrace();
             return null;
         }
     }
@@ -21,7 +24,8 @@ public class Reflection {
             Field connectionField = playerHandle.getClass().getField("playerConnection");
             return connectionField.get(playerHandle);
         } catch (Exception exception) {
-            return playerHandle;
+            exception.printStackTrace();
+            return null;
         }
     }
 
@@ -31,6 +35,7 @@ public class Reflection {
             Method aMethod = chatSerializerClass.getMethod("a", String.class);
             return aMethod.invoke(null, "{\"text\":\"" + text + "\"}");
         } catch (Exception ex) {
+            ex.printStackTrace();
             return null;
         }
     }
@@ -40,7 +45,7 @@ public class Reflection {
             Method sendPacketMethod = playerConnection.getClass().getMethod("sendPacket", getNMSClass("Packet"));
             sendPacketMethod.invoke(playerConnection, packet);
         } catch (Exception exception) {
-            // Handle any exceptions
+            exception.printStackTrace();
         }
     }
 
@@ -49,14 +54,12 @@ public class Reflection {
             Class<?> enumClass = getNMSClass(enumClassName);
             return enumClass.getField(constantName).get(null);
         } catch (Exception ex) {
+            ex.printStackTrace();
             return null;
         }
     }
 
     public static Class<?> getNMSClass(String className) throws ClassNotFoundException {
-        String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
-        String fullName = "net.minecraft.server." + version + "." + className;
-        return Class.forName(fullName);
+        return Class.forName("net.minecraft.server." + VERSION + "." + className);
     }
-
 }

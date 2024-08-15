@@ -12,7 +12,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.*;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -22,85 +21,93 @@ import static me.serbob.toastedafk.Managers.ValuesManager.*;
 import static me.serbob.toastedafk.Templates.CoreHelpers.removePlayer;
 
 public class RegionRelatedEventsHandler implements Listener {
+    private static final long MOVEMENT_THROTTLE_DELAY = 1000; // 1 second
+    private final Map<UUID, Long> lastMovementTimes = new ConcurrentHashMap<>();
+
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        if(RegionUtils.playerInCubiod(player.getLocation(),loc1,loc2)
-                /**RegionUtils.getPlayersInRegion(event.getPlayer().getLocation(),
-                        ToastedAFK.instance.getConfig().getString("wg_region"),ToastedAFK.instance)*/) {
-            OnRegionLeftEvent leaveEvent = new OnRegionLeftEvent(player, CurrentMove.DISCONNECT, event);
-            ToastedAFK.instance.getServer().getPluginManager().callEvent(leaveEvent);
+        if (isPlayerInRegion(player.getLocation())) {
+            callRegionLeftEvent(player, CurrentMove.DISCONNECT, event);
         } else {
-            if(playerStats.containsKey(player)) {
-                removePlayer(player);
-            }
+            removePlayerIfInStats(player);
         }
-        lastMovementTimes.remove(player);
+        lastMovementTimes.remove(player.getUniqueId());
     }
-    /**@EventHandler <-- might use this but for the moment using concurrenthashmaps seems to be more efficient
-    public void onPlayerMove(PlayerMoveEvent event) {
-        Player player = event.getPlayer();
-        long currentTime = System.currentTimeMillis();
-        List<MetadataValue> metadataValues = player.getMetadata("lastMovementTime");
-        if (!metadataValues.isEmpty()) {
-            long lastMovementTime = ((MetadataValue)metadataValues.get(0)).asLong();
-            if (currentTime - lastMovementTime < 1000L)
-                return;
-        }
-        event.setCancelled(updateRegions(player, CurrentMove.MOVE, event.getTo(), (PlayerEvent)event));
-        player.setMetadata("lastMovementTime", (MetadataValue)new FixedMetadataValue((Plugin)ToastedAFK.instance, Long.valueOf(currentTime)));
-    }*/
-    private final Map<UUID, Long> lastMovementTimes = new HashMap<>();
-    private static final long MOVEMENT_THROTTLE_DELAY = 1000; // 1 second
+
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        UUID uuid = event.getPlayer().getUniqueId();
+        Player player = event.getPlayer();
+        UUID uuid = player.getUniqueId();
         long currentTime = System.currentTimeMillis();
 
-        Long lastMovementTime = lastMovementTimes.get(uuid);
-        if (lastMovementTime != null) {
-            if (currentTime - lastMovementTime < MOVEMENT_THROTTLE_DELAY) {
-                return; // Skip event handling if the movement occurred too soon
-            }
+        if (shouldThrottleMovement(uuid, currentTime)) {
+            return;
         }
-        // Process the movement event
-        event.setCancelled(updateRegions(event.getPlayer(), CurrentMove.MOVE, event.getTo(), event));
-        // Update the last movement time for the player
+
+        updateRegions(player, CurrentMove.MOVE, event.getTo(), event);
         lastMovementTimes.put(uuid, currentTime);
     }
 
     @EventHandler
     public void onPlayerTeleport(PlayerTeleportEvent event) {
-        //event.setCancelled(updateRegions(event.getPlayer(), CurrentMove.TELEPORT,event.getTo(),event));
-        updateRegions(event.getPlayer(), CurrentMove.TELEPORT,event.getTo(),event);
+        updateRegions(event.getPlayer(), CurrentMove.TELEPORT, event.getTo(), event);
     }
+
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        updateRegions(event.getPlayer(), CurrentMove.SPAWN,event.getPlayer().getLocation(),event);
+        updateRegions(event.getPlayer(), CurrentMove.SPAWN, event.getPlayer().getLocation(), event);
     }
+
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event) {
-        updateRegions(event.getPlayer(), CurrentMove.SPAWN,event.getRespawnLocation(),event);
+        updateRegions(event.getPlayer(), CurrentMove.SPAWN, event.getRespawnLocation(), event);
     }
-    private boolean updateRegions(Player player, CurrentMove movementWay, Location to, PlayerEvent event) {
+
+    private void updateRegions(Player player, CurrentMove movementWay, Location to, PlayerEvent event) {
         CompletableFuture.runAsync(() -> {
-            if(!RegionUtils.playerInCubiod(to,loc1,loc2)
-            /**!RegionUtils.getPlayersInRegion(to,ToastedAFK.instance.getConfig().getString("wg_region"),ToastedAFK.instance)*/) {
-                if(playerStats.containsKey(player)) {
-                    OnRegionLeftEvent regionLeftEvent = new OnRegionLeftEvent(player,movementWay,event);
-                    Tasks.sync(() -> {
-                        ToastedAFK.instance.getServer().getPluginManager().callEvent(regionLeftEvent);
-                    });
-                }
+            if (!isPlayerInRegion(to)) {
+                handlePlayerLeaveRegion(player, movementWay, event);
             } else {
-                if(!playerStats.containsKey(player)) {
-                    OnRegionEnteredEvent regionEnteredEvent = new OnRegionEnteredEvent(player, movementWay, event);
-                    Tasks.sync(() -> {
-                        ToastedAFK.instance.getServer().getPluginManager().callEvent(regionEnteredEvent);
-                    });
-                }
+                handlePlayerEnterRegion(player, movementWay, event);
             }
         });
-        return false;
+    }
+
+    private boolean isPlayerInRegion(Location location) {
+        return RegionUtils.playerInCubiod(location, loc1, loc2);
+    }
+
+    private void handlePlayerLeaveRegion(Player player, CurrentMove movementWay, PlayerEvent event) {
+        if (playerStats.containsKey(player)) {
+            callRegionLeftEvent(player, movementWay, event);
+        }
+    }
+
+    private void handlePlayerEnterRegion(Player player, CurrentMove movementWay, PlayerEvent event) {
+        if (!playerStats.containsKey(player)) {
+            callRegionEnteredEvent(player, movementWay, event);
+        }
+    }
+
+    private void callRegionLeftEvent(Player player, CurrentMove movementWay, PlayerEvent event) {
+        OnRegionLeftEvent regionLeftEvent = new OnRegionLeftEvent(player, movementWay, event);
+        Tasks.sync(() -> ToastedAFK.instance.getServer().getPluginManager().callEvent(regionLeftEvent));
+    }
+
+    private void callRegionEnteredEvent(Player player, CurrentMove movementWay, PlayerEvent event) {
+        OnRegionEnteredEvent regionEnteredEvent = new OnRegionEnteredEvent(player, movementWay, event);
+        Tasks.sync(() -> ToastedAFK.instance.getServer().getPluginManager().callEvent(regionEnteredEvent));
+    }
+
+    private void removePlayerIfInStats(Player player) {
+        if (playerStats.containsKey(player)) {
+            removePlayer(player);
+        }
+    }
+
+    private boolean shouldThrottleMovement(UUID uuid, long currentTime) {
+        Long lastMovementTime = lastMovementTimes.get(uuid);
+        return lastMovementTime != null && currentTime - lastMovementTime < MOVEMENT_THROTTLE_DELAY;
     }
 }

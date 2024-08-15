@@ -3,7 +3,7 @@ package me.serbob.toastedafk.Commands;
 import me.serbob.toastedafk.NMS.Usages.RefActionbar;
 import me.serbob.toastedafk.NMS.Usages.RefTitle;
 import me.serbob.toastedafk.Templates.ActionBar;
-import me.serbob.toastedafk.Utils.AFKUtil;
+import me.serbob.toastedafk.Utils.ChatUtil;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
@@ -29,7 +29,7 @@ public class ALLVersionsCommandExecuter {
     }
     public static void sendCUSTOMAllVersionsTitleScreen(Player player, String message) {
         if(isVersion1_12OrBelow())
-            RefTitle.sendReflTitle(player,AFKUtil.c(message),"",10,20,10);
-        else player.sendTitle(AFKUtil.c(message),"",10,20,10);
+            RefTitle.sendReflTitle(player, ChatUtil.c(message),"",10,20,10);
+        else player.sendTitle(ChatUtil.c(message),"",10,20,10);
     }
 }

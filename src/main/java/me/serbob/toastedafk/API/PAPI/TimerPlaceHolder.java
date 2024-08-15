@@ -3,11 +3,8 @@ package me.serbob.toastedafk.API.PAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.serbob.toastedafk.Templates.ActionBar;
 import me.serbob.toastedafk.ToastedAFK;
-import me.serbob.toastedafk.Utils.AFKUtil;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
+import me.serbob.toastedafk.Utils.ChatUtil;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import static me.serbob.toastedafk.Managers.ValuesManager.playerStats;
@@ -33,6 +30,6 @@ public class TimerPlaceHolder extends PlaceholderExpansion {
         if(playerStats.containsKey(player.getPlayer())) {
             return ActionBar.formatlPlaceholderActionBar(player.getPlayer());
         }
-        return AFKUtil.c(ToastedAFK.instance.getConfig().getString("placeholder_not_in_afk_region"));
+        return ChatUtil.c(ToastedAFK.instance.getConfig().getString("placeholder_not_in_afk_region"));
     }
 }

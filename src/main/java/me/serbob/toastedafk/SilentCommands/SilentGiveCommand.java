@@ -1,7 +1,7 @@
 package me.serbob.toastedafk.SilentCommands;
 
 import me.serbob.toastedafk.ToastedAFK;
-import me.serbob.toastedafk.Utils.AFKUtil;
+import me.serbob.toastedafk.Utils.ChatUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -49,14 +49,14 @@ public class SilentGiveCommand implements CommandExecutor {
         }
         if (args.length < 3) {
             if (!victim.getInventory().addItem(item).isEmpty() && victim.getInventory().firstEmpty() == -1) {
-                victim.sendMessage(AFKUtil.c(ToastedAFK.instance.getConfig().getString("silent_player_inventory_full")));
+                victim.sendMessage(ChatUtil.c(ToastedAFK.instance.getConfig().getString("silent_player_inventory_full")));
                 return false;
             }
         } else if (args.length < 4) {
             amount = Integer.parseInt(args[2]);
             item.setAmount(amount);
             if (!victim.getInventory().addItem(item).isEmpty() && victim.getInventory().firstEmpty() == -1) {
-                victim.sendMessage(AFKUtil.c(ToastedAFK.instance.getConfig().getString("silent_player_inventory_full")));
+                victim.sendMessage(ChatUtil.c(ToastedAFK.instance.getConfig().getString("silent_player_inventory_full")));
                 return false;
             }
         }

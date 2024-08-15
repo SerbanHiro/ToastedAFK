@@ -5,7 +5,7 @@ import org.bukkit.ChatColor;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class AFKUtil {
+public class ChatUtil {
     public static String c(String preColor) {
         return ChatColor.translateAlternateColorCodes('&',format(preColor));
     }

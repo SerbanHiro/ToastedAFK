@@ -1,7 +1,7 @@
 package me.serbob.toastedafk.Events;
 
 import me.serbob.toastedafk.ToastedAFK;
-import me.serbob.toastedafk.Utils.AFKUtil;
+import me.serbob.toastedafk.Utils.ChatUtil;
 import me.serbob.toastedafk.Utils.Settings;
 import me.serbob.toastedafk.Utils.UpdateChecker;
 import org.bukkit.entity.Player;
@@ -21,15 +21,15 @@ public class OPEvents implements Listener {
                 //PLEASE REPLACE THE RESOURCE ID WITH YOUR SPIGOT RESOURCE
                 new UpdateChecker(ToastedAFK.instance, 108107).getLatestVersion(version -> {
                     if (!ToastedAFK.instance.getDescription().getVersion().equalsIgnoreCase(version)) {
-                        p.sendMessage(AFKUtil.c("&8&l&m⎯⎯⎯⎯⎯⎯⎯⎯⎯&r &x&f&f&a&d&6&1&lToastedAFK&r &8&l&m⎯⎯⎯⎯⎯⎯⎯⎯⎯"));
-                        p.sendMessage(AFKUtil.c("&c&lWARNING &8» &cToastedAFK is outdated"));
-                        p.sendMessage(AFKUtil.c("&c&lWARNING &8» &7Newest version  &a'{newestVersion}'"
+                        p.sendMessage(ChatUtil.c("&8&l&m⎯⎯⎯⎯⎯⎯⎯⎯⎯&r &x&f&f&a&d&6&1&lToastedAFK&r &8&l&m⎯⎯⎯⎯⎯⎯⎯⎯⎯"));
+                        p.sendMessage(ChatUtil.c("&c&lWARNING &8» &cToastedAFK is outdated"));
+                        p.sendMessage(ChatUtil.c("&c&lWARNING &8» &7Newest version  &a'{newestVersion}'"
                                 .replace("{newestVersion}",version)));
-                        p.sendMessage(AFKUtil.c("&c&lWARNING &8» &7Your version '&c{version}'"
+                        p.sendMessage(ChatUtil.c("&c&lWARNING &8» &7Your version '&c{version}'"
                                 .replace("{version}",Settings.VERSION)));
-                        p.sendMessage(AFKUtil.c("&c&lWARNING &8» &7Please update here &f&n{plugin_url}"
+                        p.sendMessage(ChatUtil.c("&c&lWARNING &8» &7Please update here &f&n{plugin_url}"
                                 .replace("{plugin_url}",Settings.PLUGIN_URL)));
-                        p.sendMessage(AFKUtil.c("&8&l&m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯"));                    }
+                        p.sendMessage(ChatUtil.c("&8&l&m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯"));                    }
                 });
             }
         }

@@ -3,50 +3,50 @@ package me.serbob.toastedafk.Managers;
 import org.bukkit.Bukkit;
 
 public class VersionManager {
+    private static final String[] FUTURE_VERSIONS = {"1.20.6", "1.21"};
+    private static final VersionInfo SERVER_VERSION = parseServerVersion();
+
     public static boolean isVersion1_12OrBelow() {
-        boolean check;
-
-        if(Bukkit.getBukkitVersion().contains("1.20.6") ||
-        Bukkit.getBukkitVersion().contains("1.21")) {
-            return false;
-        }
-
-        String serverVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
-        String[] versionParts = serverVersion.substring(1).split("_");
-        int majorVersion = Integer.parseInt(versionParts[0]);
-        int minorVersion = Integer.parseInt(versionParts[1]);
-
-        if (majorVersion < 1 || (majorVersion == 1 && minorVersion <= 12)) {
-            check = true;
-        } else {
-            check = false;
-        }
-        return check;
+        if (isFutureVersion()) return false;
+        return SERVER_VERSION.majorVersion < 1 ||
+                (SERVER_VERSION.majorVersion == 1 && SERVER_VERSION.minorVersion <= 12);
     }
+
     public static boolean isVersion1_8OrAbove() {
-        if(Bukkit.getBukkitVersion().contains("1.20.6") ||
-                Bukkit.getBukkitVersion().contains("1.21")) {
-            return true;
-        }
-
-        String serverVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
-        String[] versionParts = serverVersion.substring(1).split("_");
-        int majorVersion = Integer.parseInt(versionParts[0]);
-        int minorVersion = Integer.parseInt(versionParts[1]);
-
-        return majorVersion >= 1 && minorVersion >= 8;
+        if (isFutureVersion()) return true;
+        return SERVER_VERSION.majorVersion > 1 ||
+                (SERVER_VERSION.majorVersion == 1 && SERVER_VERSION.minorVersion >= 8);
     }
-    public static boolean isVersion1_8() {
-        if(Bukkit.getBukkitVersion().contains("1.20.6") ||
-                Bukkit.getBukkitVersion().contains("1.21")) {
-            return false;
-        }
 
+    public static boolean isVersion1_8() {
+        if (isFutureVersion()) return false;
+        return SERVER_VERSION.majorVersion == 1 && SERVER_VERSION.minorVersion == 8;
+    }
+
+    private static boolean isFutureVersion() {
+        String version = Bukkit.getBukkitVersion();
+        for (String futureVersion : FUTURE_VERSIONS) {
+            if (version.contains(futureVersion)) return true;
+        }
+        return false;
+    }
+
+    private static VersionInfo parseServerVersion() {
         String serverVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
         String[] versionParts = serverVersion.substring(1).split("_");
-        int majorVersion = Integer.parseInt(versionParts[0]);
-        int minorVersion = Integer.parseInt(versionParts[1]);
+        return new VersionInfo(
+                Integer.parseInt(versionParts[0]),
+                Integer.parseInt(versionParts[1])
+        );
+    }
 
-        return majorVersion == 1 && minorVersion == 8;
+    private static class VersionInfo {
+        final int majorVersion;
+        final int minorVersion;
+
+        VersionInfo(int majorVersion, int minorVersion) {
+            this.majorVersion = majorVersion;
+            this.minorVersion = minorVersion;
+        }
     }
 }

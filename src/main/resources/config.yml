@@ -1,52 +1,76 @@
-# DOCS BEGIN #
+###############################################################################
+# DOCUMENTATION
+###############################################################################
+# Thank you for using ToastedAFK Lite!
+# For support join our discord server and create a ticket
+# ➥ discord.gg/dn8YE2Ctbv
+#
 # Commands:
 #  - /tafk <wand/save/reload/item> (aliases: /afk)
-#  - /silentgive {player} <item> <amount>(optional, by default it's 1)
-#    -> (if you use this inside commands to give to afk players, you can even give NBT items too!)
-#    -> (if you want to give custom items from the items(configuration section) you will need to put the name inside { }
-#    -> e.g.: /sgive {player} {test3} 2
-# DOCS END #
+#     Used for various AFK-related actions
+#  - /silentgive {player} <item> <amount>(optional, default: 1)
+#     Gives items silently, even with NBT data
+#     For custom items, use {item_name} from the 'items' section
+#     Example: /sgive {player} {test3} 2
+###############################################################################
 
-# Update Settings
-# wg_region: afk THIS IS NOT FOR USE
-check_for_update: true  # If a new update on spigot is released, you'll get a message in console and ingame
-use_probability_feature: false  # Enables the probability feature from each region
-use_random_feature: false  # Enables the 50/50 feature
-use_commands: true  # Enables classic feature
-reward_synchronization: false  # Uses only default_afk_time
-how_often_all_players_and_region_checked: 1  # Controls how often all players and regions are checked (default: 1 second)
-default_afk_time: 1200  # Default AFK time in seconds
+###############################################################################
+# GENERAL SETTINGS
+###############################################################################
+# Update and Feature Settings
+check_for_update: true        # Notifies about new updates on Spigot
+use_probability_feature: false # Enables probability-based command execution
+use_random_feature: false     # Enables 50/50 chance command execution
+use_commands: true            # Enables standard command execution
+reward_synchronization: false # Uses only default_afk_time if true
 
-# AFK Times based on permissions
+# Timing Settings
+how_often_all_players_and_region_checked: 1  # Check interval in seconds
+default_afk_time: 1200                       # Default AFK time in seconds
+
+# Permission-based AFK Times
 afk_times:
   default: 1200  # Default AFK time in seconds
+  # Add more permission-based times here, e.g.:
+  # vip: 600
+  # mvp: 300
 
-# Region Configuration
+###############################################################################
+# REGION CONFIGURATION
+###############################################################################
 region:
   locations:
     world: world
-    loc1:  # Location 1 coordinates
+    loc1:  # First corner of the AFK region
       x: x
       y: y
       z: z
-    loc2:  # Location 2 coordinates
+    loc2:  # Second corner of the AFK region
       x: x
       y: y
       z: z
 
-# MESSAGES AND SOME CONFIGURATIONS ABOUT REGION
+###############################################################################
+# MESSAGES AND REGION-SPECIFIC SETTINGS
+###############################################################################
 placeholder_not_in_afk_region: "Not in AFK Zone"
 silent_player_inventory_full: "&cYour inventory is full, therefore you will not receive anything!"
 player_entered_region: "&cYou &fentered &can afk region!"
 player_left_region: "&cYou just &fleft &cthe afk region!"
-show_xp_bar: true  # When player is inside the region, it will show the XP bar (BETA)
+show_xp_bar: true       # Shows XP bar when player is in the AFK region (BETA)
 save_xp_inside_region: false
+
+# Timeout Configuration
 timeout:
-  times: 0 # put 0 to not use this feature
+  times: 0  # Set to 0 to disable this feature
   commands:
     - "msg {player} you have been teleported back to spawn!"
     # - "tp {player} -2217 94 -490"
 
+###############################################################################
+# DISPLAY SETTINGS
+###############################################################################
+# Action Bar Configuration
 actionbar:
   show: false
   show_timer: true
@@ -62,32 +86,39 @@ actionbar:
     pl_second: " seconds."
     before_msg: "{player} >> time left >> "
 
-loading_screen:  # To use this, put {loadingScreenBar} or {loadingScreenPercentage}
+# Loading Screen Configuration
+# Use {loadingScreenBar} or {loadingScreenPercentage} in messages
+loading_screen:
   totalTiles: 10
   symbol: "|"
   loading_color: "&7"
   loading_complete: "&a"
 
-bossbar:  # The bossbar will automatically update if you use the command /afk bossbar ...
+# Boss Bar Configuration
+bossbar:
   show: false
   color: "RED"
   style: "SOLID"
-  text: "Idk"  # Put {timer} if you'd like the exact same text from actionbar
+  text: "Idk"  # Use {timer} to show the same text as actionbar
 
+# Title Screen Configuration
 title_screen:
   show: true
   title: "&7[{loadingScreenBar}&7]"
   subtitle: "&c{loadingScreenPercentage}%"
 
-commands:  # Silent commands: use sgive to give players items without showing anything in console
-  # BTW, ONLY with sgive you will be able to give items with NBT tags if players are AFK
-  # Usage: /silentgive (or sgive) {player} (if it's consolesender then you can put the name from items inside {})
+###############################################################################
+# COMMAND EXECUTION SETTINGS
+###############################################################################
+# Standard Commands
+commands:
   - "msg {player} you were afk!"
   - "eco give {player} 100"
   # - "silentgive {player} {test3}"
 
+# Random Command Execution
 random_commands:
-  times: 2  # How many times should the algorithm shuffle and give 1 command from the list
+  times: 2  # Number of commands to execute from each list
   list:
     test1:
       - "msg {player} this is test1"
@@ -99,6 +130,7 @@ random_commands:
       - "msg {player} this is test3"
       - "msg {player} random 3"
 
+# Probability-based Command Execution
 probability_commands:
   first_prob:
     commands:
@@ -116,10 +148,17 @@ probability_commands:
       - "msg {player} 15%"
     chance: 15.0
 
+###############################################################################
+# COMMAND RESTRICTION SETTINGS
+###############################################################################
 on_command_deny: "&cYou cannot use this command here"
-denied_commands: # you can only deny commands here, not events...
+denied_commands:
   - "/shop"
+  # Add more commands to deny here
 
+###############################################################################
+# CUSTOM ITEM DEFINITIONS
+###############################################################################
 items:
   test3:
     ==: org.bukkit.inventory.ItemStack

@@ -1,7 +1,6 @@
 package me.serbob.toastedafk;
 
 import me.serbob.toastedafk.Classes.Metrics;
-import me.serbob.toastedafk.Classes.PlayerStats;
 import me.serbob.toastedafk.Managers.AFKManager;
 import me.serbob.toastedafk.Managers.ValuesManager;
 import me.serbob.toastedafk.API.PAPI.TimerPlaceHolder;
@@ -21,28 +20,41 @@ public final class ToastedAFK extends JavaPlugin {
     public static ToastedAFK instance;
     public static File configFile;
     public static YamlConfiguration file;
+
     @Override
     public void onEnable() {
-        instance=this;
-        saveDefaultConfig();
-        configFile = new File(getDataFolder(),"config.yml");
+        instance = this;
+        initializeConfig();
         enableMetrics();
-        getServer().getScheduler().scheduleSyncDelayedTask(this, () -> {
-            ValuesManager.loadConfigValues();
-            AFKManager.start();
-        });
-        if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            new TimerPlaceHolder().register();
-        }
-        /**getServer().getScheduler().runTaskTimer(this, () -> {
-            System.out.println(ValuesManager.playerStats);
-        },20L,10L);*/
+        initializePlugin();
+        registerPlaceholders();
     }
+
     @Override
     public void onDisable() {
         Logger.log(Logger.LogLevel.WARNING, "Server disabled! Giving player's exp back");
         serverCrash();
     }
+
+    private void initializeConfig() {
+        saveDefaultConfig();
+        configFile = new File(getDataFolder(), "config.yml");
+        file = YamlConfiguration.loadConfiguration(configFile);
+    }
+
+    private void initializePlugin() {
+        getServer().getScheduler().runTask(this, () -> {
+            ValuesManager.loadConfigValues();
+            AFKManager.start();
+        });
+    }
+
+    private void registerPlaceholders() {
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new TimerPlaceHolder().register();
+        }
+    }
+
     public void enableMetrics() {
         Metrics metrics = new Metrics(this,18463);
         metrics.addCustomChart(new Metrics.MultiLineChart("players_and_servers", new Callable<Map<String, Integer>>() {

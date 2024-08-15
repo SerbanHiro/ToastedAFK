@@ -1,9 +1,7 @@
 package me.serbob.toastedafk.Events;
 
-import me.serbob.toastedafk.Utils.AFKUtil;
-import me.serbob.toastedafk.Utils.RegionUtils;
+import me.serbob.toastedafk.Utils.ChatUtil;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,7 +10,6 @@ import org.bukkit.inventory.EquipmentSlot;
 
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 import static me.serbob.toastedafk.Managers.ValuesManager.tempLoc1;
 import static me.serbob.toastedafk.Managers.ValuesManager.tempLoc2;
@@ -45,7 +42,7 @@ public class WandEvents implements Listener {
                     Block block = event.getClickedBlock();
                     event.setCancelled(true);
                     tempLoc1 = block.getLocation();
-                    event.getPlayer().sendMessage(AFKUtil.c("&7(&cAFK&7) Position 1! x: &c" + event.getClickedBlock().getX() +
+                    event.getPlayer().sendMessage(ChatUtil.c("&7(&cAFK&7) Position 1! x: &c" + event.getClickedBlock().getX() +
                             " &7y: &c" + event.getClickedBlock().getY() +
                             " &7z: &c" + event.getClickedBlock().getZ()));
 
@@ -58,7 +55,7 @@ public class WandEvents implements Listener {
                         if (hand.equals(EquipmentSlot.HAND)) {
                             Block block = event.getClickedBlock();
                             tempLoc2 = block.getLocation();
-                            event.getPlayer().sendMessage(AFKUtil.c("&7(&cAFK&7) Position 2! x: &c" + event.getClickedBlock().getX() +
+                            event.getPlayer().sendMessage(ChatUtil.c("&7(&cAFK&7) Position 2! x: &c" + event.getClickedBlock().getX() +
                                     " &7y: &c" + event.getClickedBlock().getY() +
                                     " &7z: &c" + event.getClickedBlock().getZ()));
                         }
@@ -66,7 +63,7 @@ public class WandEvents implements Listener {
                     if (ok2 == 0) {
                         Block block = event.getClickedBlock();
                         tempLoc2 = block.getLocation();
-                        event.getPlayer().sendMessage(AFKUtil.c("&7(&cAFK&7) Position 2! x: &c" + event.getClickedBlock().getX() +
+                        event.getPlayer().sendMessage(ChatUtil.c("&7(&cAFK&7) Position 2! x: &c" + event.getClickedBlock().getX() +
                                 " &7y: &c" + event.getClickedBlock().getY() +
                                 " &7z: &c" + event.getClickedBlock().getZ()));
                     }

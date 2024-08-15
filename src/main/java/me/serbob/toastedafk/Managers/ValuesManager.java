@@ -1,69 +1,67 @@
 package me.serbob.toastedafk.Managers;
 
 import me.serbob.toastedafk.Classes.PlayerStats;
-import me.serbob.toastedafk.Functions.AFKCore;
 import me.serbob.toastedafk.ToastedAFK;
-import me.serbob.toastedafk.Utils.AFKUtil;
+import me.serbob.toastedafk.Utils.ChatUtil;
 import me.serbob.toastedafk.Utils.Logger;
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ValuesManager {
-    public static Map<Player, PlayerStats> playerStats = new ConcurrentHashMap<>();
-    public static int TIMEOUT_SECONDS=1200; // 20 minutes in seconds
+    public static final Map<Player, PlayerStats> playerStats = new ConcurrentHashMap<>();
+    public static int TIMEOUT_SECONDS = 1200; // 20 minutes in seconds
     public static int DEFAULT_AFK_TIME;
     public static World globalWorld;
-    public static Location loc1;
-    public static Location loc2;
-    public static Location tempLoc1;
-    public static Location tempLoc2;
+    public static Location loc1, loc2, tempLoc1, tempLoc2;
     public static BossBar bossBar;
     public static BarColor barColor;
     public static BarStyle barStyle;
-    //public static PRTree<Player> playerTree;
-    //public static SimpleMBR bounds;
-    //public static int branchFactor;
+
     public static void loadConfigValues() {
-        globalWorld = Bukkit.getWorld(Objects.requireNonNull(ToastedAFK.instance.getConfig().getString("region.locations.world")));
-        loc1 = new Location(globalWorld,
-                ToastedAFK.instance.getConfig().getDouble("region.locations.loc1.x"),
-                ToastedAFK.instance.getConfig().getDouble("region.locations.loc1.y"),
-                ToastedAFK.instance.getConfig().getDouble("region.locations.loc1.z"));
-        loc2 = new Location(globalWorld,
-                ToastedAFK.instance.getConfig().getDouble("region.locations.loc2.x"),
-                ToastedAFK.instance.getConfig().getDouble("region.locations.loc2.y"),
-                ToastedAFK.instance.getConfig().getDouble("region.locations.loc2.z"));
-        DEFAULT_AFK_TIME = ToastedAFK.instance.getConfig().getInt("default_afk_time");
-        if(ToastedAFK.instance.getConfig().getBoolean("bossbar.show")) {
-            barColor = BarColor.valueOf(ToastedAFK.instance.getConfig().getString("bossbar.color"));
-            barStyle = BarStyle.valueOf(ToastedAFK.instance.getConfig().getString("bossbar.style"));
-            bossBar = Bukkit.createBossBar(AFKUtil.c(ToastedAFK.instance.getConfig().getString("bossbar.text")), barColor, barStyle);
-        }
+        Configuration config = ToastedAFK.instance.getConfig();
 
-        //branchFactor = ToastedAFK.instance.getConfig().getInt("branchFactor");
-        //bounds = playerBounds(loc1, loc2);
-        //playerTree = new PRTree<>(new AFKCore.PlayerMBRConverter(),branchFactor);
-        //playerTree.load(globalWorld.getPlayers());
-        Logger.log(Logger.LogLevel.INFO, AFKUtil.c("&aValues loaded!"));
+        loadWorldAndLocations(config);
+        loadAFKTime(config);
+        loadBossBar(config);
+
+        Logger.log(Logger.LogLevel.INFO, ChatUtil.c("&aValues loaded!"));
     }
-    /**private static SimpleMBR playerBounds(Location loc1, Location loc2) {
-        double minX = Math.min(loc1.getX(), loc2.getX());
-        double minY = Math.min(loc1.getY(), loc2.getY());
-        double minZ = Math.min(loc1.getZ(), loc2.getZ());
-        double maxX = Math.max(loc1.getX(), loc2.getX());
-        double maxY = Math.max(loc1.getY(), loc2.getY());
-        double maxZ = Math.max(loc1.getZ(), loc2.getZ());
 
-        return new SimpleMBR(minX, maxX, minY, maxY, minZ, maxZ);
-    }*/
+    private static void loadWorldAndLocations(Configuration config) {
+        String worldName = config.getString("region.locations.world");
+        globalWorld = Objects.requireNonNull(Bukkit.getWorld(worldName), "World not found: " + worldName);
+
+        loc1 = loadLocation(config, "region.locations.loc1");
+        loc2 = loadLocation(config, "region.locations.loc2");
+    }
+
+    private static Location loadLocation(Configuration config, String path) {
+        return new Location(globalWorld,
+                config.getDouble(path + ".x"),
+                config.getDouble(path + ".y"),
+                config.getDouble(path + ".z"));
+    }
+
+    private static void loadAFKTime(Configuration config) {
+        DEFAULT_AFK_TIME = config.getInt("default_afk_time");
+    }
+
+    private static void loadBossBar(Configuration config) {
+        if (config.getBoolean("bossbar.show")) {
+            barColor = BarColor.valueOf(config.getString("bossbar.color", "WHITE"));
+            barStyle = BarStyle.valueOf(config.getString("bossbar.style", "SOLID"));
+            String bossBarText = ChatUtil.c(config.getString("bossbar.text", ""));
+            bossBar = Bukkit.createBossBar(bossBarText, barColor, barStyle);
+        }
+    }
 }

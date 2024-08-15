@@ -1,47 +1,58 @@
 package me.serbob.toastedafk.Templates;
 
 import me.serbob.toastedafk.ToastedAFK;
-import me.serbob.toastedafk.Utils.AFKUtil;
-import me.serbob.toastedafk.Utils.Logger;
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static me.serbob.toastedafk.Managers.ValuesManager.playerStats;
-
 public class ItemDistribution {
-    private static final Random random = new Random();
+    private static final Random RANDOM = new Random();
+
     public static void distributeCommands(Player player) {
+        ConfigurationSection probSection = ToastedAFK.instance.getConfig().getConfigurationSection("probability_commands");
+        if (probSection == null) {
+            return;
+        }
 
         List<List<String>> commands = new ArrayList<>();
         List<Double> probabilities = new ArrayList<>();
-        for(String key:ToastedAFK.instance.getConfig().getConfigurationSection("probability_commands").getKeys(false)) {
-            commands.add(ToastedAFK.instance.getConfig().getStringList("probability_commands."+key+".commands"));
-            probabilities.add(ToastedAFK.instance.getConfig().getDouble("probability_commands."+key+".chance"));
+
+        for (String key : probSection.getKeys(false)) {
+            ConfigurationSection commandSection = probSection.getConfigurationSection(key);
+            if (commandSection != null) {
+                commands.add(commandSection.getStringList("commands"));
+                probabilities.add(commandSection.getDouble("chance"));
+            }
         }
 
-        // Normalize probabilities to ensure they add up to 100%
-        double totalProbability = probabilities.stream().mapToDouble(Double::doubleValue).sum();
-        probabilities.replaceAll(aDouble -> aDouble / totalProbability * 100);
+        if (commands.isEmpty() || probabilities.isEmpty()) {
+            return;
+        }
 
-        List<String> command = getRandomItem(commands, probabilities);
-        CoreHelpers.executeCommands(player,command);
+        normalizeProbabilities(probabilities);
+
+        List<String> selectedCommands = getRandomItem(commands, probabilities);
+        CoreHelpers.executeCommands(player, selectedCommands);
     }
-    // Helper method to retrieve a random item based on probabilities
+
+    private static void normalizeProbabilities(List<Double> probabilities) {
+        double totalProbability = probabilities.stream().mapToDouble(Double::doubleValue).sum();
+        for (int i = 0; i < probabilities.size(); i++) {
+            probabilities.set(i, probabilities.get(i) / totalProbability * 100);
+        }
+    }
+
     private static List<String> getRandomItem(List<List<String>> commands, List<Double> probabilities) {
         if (commands.size() != probabilities.size()) {
-            throw new IllegalArgumentException("Items and probabilities must have the same size");
+            throw new IllegalArgumentException("Commands and probabilities must have the same size");
         }
 
-        double totalProbability = probabilities.stream().mapToDouble(Double::doubleValue).sum();
-        double randomValue = random.nextDouble() * totalProbability;
-
+        double randomValue = RANDOM.nextDouble() * 100;
         double cumulativeProbability = 0.0;
+
         for (int i = 0; i < commands.size(); i++) {
             cumulativeProbability += probabilities.get(i);
             if (randomValue < cumulativeProbability) {
@@ -49,7 +60,7 @@ public class ItemDistribution {
             }
         }
 
-        // This line will only be reached if the probabilities do not sum up to 100%
-        throw new IllegalStateException("Probabilities do not sum up to 100%");
+        // If we reach here, return the last item (due to potential floating-point inaccuracies)
+        return commands.get(commands.size() - 1);
     }
 }
