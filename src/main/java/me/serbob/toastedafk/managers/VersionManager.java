@@ -30,18 +30,26 @@ public class VersionManager {
     private static boolean isFutureVersion() {
         String version = Bukkit.getBukkitVersion();
         for (String futureVersion : FUTURE_VERSIONS) {
-            if (version.contains(futureVersion)) return true;
+            if (version.startsWith(futureVersion)) return true;
         }
         return false;
     }
 
     private static VersionInfo parseServerVersion() {
-        String serverVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
-        String[] versionParts = serverVersion.substring(1).split("_");
-        return new VersionInfo(
-                Integer.parseInt(versionParts[0]),
-                Integer.parseInt(versionParts[1])
-        );
+        String bukkitVersion = Bukkit.getBukkitVersion();
+        String[] versionParts = bukkitVersion.split("-")[0].split("\\.");
+
+        if (versionParts.length >= 2) {
+            try {
+                int majorVersion = Integer.parseInt(versionParts[0]);
+                int minorVersion = Integer.parseInt(versionParts[1]);
+                return new VersionInfo(majorVersion, minorVersion);
+            } catch (NumberFormatException e) {
+                return new VersionInfo(1, 0);
+            }
+        }
+
+        return new VersionInfo(1, 0);
     }
 
     private static class VersionInfo {
