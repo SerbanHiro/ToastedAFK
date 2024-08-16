@@ -1,13 +1,13 @@
 package me.serbob.toastedafk.API.PAPI;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import me.serbob.toastedafk.Templates.ActionBar;
+import me.serbob.toastedafk.templates.ActionBar;
 import me.serbob.toastedafk.ToastedAFK;
-import me.serbob.toastedafk.Utils.ChatUtil;
+import me.serbob.toastedafk.utils.ChatUtil;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
-import static me.serbob.toastedafk.Managers.ValuesManager.playerStats;
+import static me.serbob.toastedafk.managers.ValuesManager.playerStats;
 
 public class TimerPlaceHolder extends PlaceholderExpansion {
     @Override

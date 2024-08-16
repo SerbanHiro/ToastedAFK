@@ -1,10 +1,11 @@
 package me.serbob.toastedafk;
 
-import me.serbob.toastedafk.Classes.Metrics;
-import me.serbob.toastedafk.Managers.AFKManager;
-import me.serbob.toastedafk.Managers.ValuesManager;
+import me.serbob.toastedafk.objectholders.Metrics;
+import me.serbob.toastedafk.managers.AFKManager;
+import me.serbob.toastedafk.managers.ValuesManager;
 import me.serbob.toastedafk.API.PAPI.TimerPlaceHolder;
-import me.serbob.toastedafk.Utils.Logger;
+import me.serbob.toastedafk.managers.VersionManager;
+import me.serbob.toastedafk.utils.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -14,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-import static me.serbob.toastedafk.Templates.CoreHelpers.serverCrash;
+import static me.serbob.toastedafk.templates.CoreHelpers.serverCrash;
 
 public final class ToastedAFK extends JavaPlugin {
     public static ToastedAFK instance;
@@ -24,8 +25,12 @@ public final class ToastedAFK extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+
         initializeConfig();
         enableMetrics();
+
+        new VersionManager();
+
         initializePlugin();
         registerPlaceholders();
     }

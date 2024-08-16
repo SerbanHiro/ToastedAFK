@@ -56,32 +56,96 @@ dependencies {
 ### Retrieving stats from an AFK player
 
 Getting the stats from an AFK player is straightforward. Here's an example of how to do it:
-```java
-import me.serbob.toastedafk.Classes.PlayerStats;
 
-Player target=...
-if(playerStats.get(player)==null) { return; } 
+```java
+import me.serbob.toastedafk.objectholders.PlayerStats;
+
+Player target =...
+        if(playerStats.
+
+get(player)==null){return;}
 PlayerStats playerStatsPlayer = playerStats.get(player);
 
 // After this you can retrieve the following things:
 
-playerStatsPlayer.getDefaultAfkTime() --> this will return how many seconds the player has to wait in total
-playerStatsPlayer.getAfkTimer() --> this will return how many seconds the player has left until he gets a reward
-playerStatsPlayer.setAfkTimer() --> with this you can set the current seconds the player has left
-playerStatsPlayer.getLevelTimer() --> this will return the xp levels (those lines ----)
-playerStatsPlayer.getExpTimer() --> this will return the EXP
-playerStatsPlayer.isXpEnabled() --> this returns whether the player has been using the xp feature
-playerStatsPlayer.getTimeoutTimes() --> this will return how many times the player has received the rewards until he will be executed some timeout commands
-playerStatsPlayer.setTimeoutTimes() --> this is how you can set how many times the player can receive rewards until some commands will be executed
+playerStatsPlayer.
+
+getDefaultAfkTime() -->this will return
+how many
+seconds the
+player has
+to wait
+in total
+playerStatsPlayer.
+
+getAfkTimer() -->this will return
+how many
+seconds the
+player has
+left until
+he gets
+a reward
+playerStatsPlayer.
+
+setAfkTimer() -->with this
+you can
+set the
+current seconds
+the player
+has left
+playerStatsPlayer.
+
+getLevelTimer() -->this will return
+the xp
+
+levels(those lines ----)
+playerStatsPlayer.
+
+getExpTimer() -->this will return
+the EXP
+playerStatsPlayer.
+
+isXpEnabled() -->this
+returns whether
+the player
+has been
+using the
+xp feature
+playerStatsPlayer.
+
+getTimeoutTimes() -->this will return
+how many
+times the
+player has
+received the
+rewards until
+he will
+be executed
+some timeout
+commands
+playerStatsPlayer.
+
+setTimeoutTimes() -->this
+is how
+you can
+set how
+many times
+the player
+can receive
+rewards until
+some commands
+will be
+executed
 ```
 
 ### Events
 
 There are 3 events, OnRegionEnteredEvent, OnRegionLeftEvent and AFKRewardEvent
+
 ```java
-import me.serbob.toastedafk.API.Events.OnRegionEnteredEvent;
-import me.serbob.toastedafk.API.Events.OnRegionLeftEvent;
-import me.serbob.toastedafk.API.Events.AFKRewardEvent;
+import me.serbob.toastedafk.API.events.OnRegionEnteredEvent;
+import me.serbob.toastedafk.API.events.OnRegionLeftEvent;
+import me.serbob.toastedafk.API.events.AFKRewardEvent;
 
 // other classes
 
@@ -100,7 +164,7 @@ public class PlayerRegionHandler implements Listener {
 
     @EventHandler
     public void onRewardReceived(AFKRewardEvent event) {
-        System.out.println("PLAYER: "+event.getPlayer()+" has received: "+event.getPlayerStats());
+        System.out.println("PLAYER: " + event.getPlayer() + " has received: " + event.getPlayerStats());
     }
 }
 ```
