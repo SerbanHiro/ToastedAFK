@@ -47,9 +47,11 @@ public class ActionBar {
 
     private static void appendTimeUnit(StringBuilder builder, long value, String singular, String plural) {
         if (value > 0) {
-            builder.append(value).append(" ")
+            builder.append(value)
+                    //.append(" ")
                     .append(ChatUtil.c(config.getString("actionbar.messages." + (value == 1 ? "sg_" : "pl_") + singular)))
-                    .append(" ");
+                    //.append(" ")
+            ;
         }
     }
 
